@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+	<title>P2</title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<style>
+	</style>
+	<body>
+		<p>
+			<svg id="line-chart" width='700' height='700'/>
+			<script>
+				console.log('starting');
+				var lineChart = d3.select('#line-chart');
+				var parseTime = d3.timeParse('%Y');
+
+				//Keeps all of the percent growth data indexed by variable name
+				//(e.g., data['Big Mac Price'] returns the series data for
+				//Big mac prices)
+				var data = {}
+
+				//Graphs US GDP
+				var graphGDP = function(gdpData){
+					var xAxis = d3.scaleTime()
+									.domain(d3.extent(gdpData, function(d){return d.Year;}))
+									.rangeRound([20,680]);
+					var yAxis = d3.scaleLinear()
+									.domain(d3.extent(gdpData, function(d){return d.Growth;}))
+									.rangeRound([680,20]);
+					var line = d3.line()
+					    .x(function(d) { return xAxis(d.Year); })
+					    .y(function(d) { return yAxis(d.Growth); });
+
+					lineChart.append("path")
+						      .datum(gdpData)
+						      .attr("fill", "none")
+						      .attr("stroke", "steelblue")
+						      .attr("stroke-linejoin", "round")
+						      .attr("stroke-linecap", "round")
+						      .attr("stroke-width", 1.5)
+						      .attr("d", line);
+					 lineChart.append("g")
+				      .attr("transform", "translate(0,680)")
+				      .call(d3.axisBottom(xAxis))
+
+				  	lineChart.append("g")
+				  	.attr("transform", "translate(20,0)")
+				      .call(d3.axisLeft(yAxis))
+				}
+
+				//Updates global data variable with data from given
+				//csv file
+				function initData(filename, varName){
+					var parsedFile = d3.csv(filename, function(d){
+						return {
+							Year: parseTime(d.Year),
+							Growth: +d.Growth
+						};
+					}, 
+					function(parsedFile){
+						console.log(parsedFile);
+						if(varName == 'GDP')
+							graphGDP(parsedFile);
+						data[varName] = parsedFile;
+					});
+				}
+
+				//Graphs [varName] and US GDP over time
+				function plotLine(varName){
+					lineChart.selectAll('*').remove();
+					console.log('plotting line');
+					var gdpData = data['GDP'];
+					var varData = data[varName];
+					var xAxis = d3.scaleTime()
+									.domain(d3.extent(varData, function(d){return d.Year;}))
+									.rangeRound([20,680]);
+					var yAxis = d3.scaleLinear()
+							.rangeRound([680,20]);
+					var gdpMin = d3.min(gdpData, function(d){return d.Growth;});
+					var gdpMax = d3.max(gdpData, function(d){return d.Growth;});
+					var varMin = d3.min(varData, function(d){return d.Growth;});
+					var varMax = d3.max(varData, function(d){return d.Growth;});
+					if(gdpMin < varMin || gdpMax > varMax){
+						yAxis.domain([gdpMin, gdpMax]);
+					}
+					else{
+						yAxis.domain([varMin, varMax]);
+					}
+
+					var line = d3.line()
+					    .x(function(d) { return xAxis(d.Year); })
+					    .y(function(d) { return yAxis(d.Growth); });
+
+					lineChart.append("path")
+						      .datum(gdpData)
+						      .attr("fill", "none")
+						      .attr("stroke", "steelblue")
+						      .attr("stroke-linejoin", "round")
+						      .attr("stroke-linecap", "round")
+						      .attr("stroke-width", 1.5)
+						      .attr("d", line);
+
+					lineChart.append("path")
+						      .datum(varData)
+						      .attr("fill", "none")
+						      .attr("stroke", "orange")
+						      .attr("stroke-linejoin", "round")
+						      .attr("stroke-linecap", "round")
+						      .attr("stroke-width", 1.5)
+						      .attr("d", line);
+
+					 lineChart.append("g")
+				      .attr("transform", "translate(0,680)")
+				      .call(d3.axisBottom(xAxis))
+
+				  	lineChart.append("g")
+				  	.attr("transform", "translate(20,0)")
+				      .call(d3.axisLeft(yAxis))
+
+				}
+
+
+				d3.queue()
+					.defer(initData, 'gdp.csv', 'GDP')
+					.defer(initData, 'BigMac.csv', "Big Mac Price")
+					.defer(initData, 'BoxOfficeSales.csv', 'Box Office Sales')
+					.await(function(error){console.log('all done');});
+
+				
+
+
+			</script>
+		</p>
+
+	</body>
+</html>
