@@ -6,38 +6,51 @@
 	</style>
 	<body>
 		<p>
-			<svg id="line-chart" width='700' height='700'/>
-			<svg id="rect-chart" width='700' height='700'>
+			<svg id="line-chart" width='700' height='700'/><br>
+			<svg id="bar-chart" width='700' height='700'/><br>
+			<svg id="freq-chart" width='700' height='700'/><br>
 			<script>
-				console.log('starting');
 				var lineChart = d3.select('#line-chart');
-				var rectChart = d3.select('#rect-chart');
+				var barChart = d3.select('#bar-chart');
+				var freqChart = d3.select('#freq-chart');
 				var parseTime = d3.timeParse('%Y');
 				function parseCarRow(r){
-					return {
-						'Aston Martin': +r["Aston Martin"],
-						Audi:+r["Audi"],
-						BMW: +r["BMW"],
-						Bentley: +r["Bentley"],
-						Bugatti: +r["Bugatti"],
-						Cadillac: +r["Cadillac"],
-						Chevrolet: +r["Chevrolet"],
-						Ferrari: +r["Ferrari"],
-						Hummer: +r["Hummer"],
-						Jaguar: +r["Jaguar"],
-						Jeep: +r["Jeep"],
-						Lamborghini: +r["Lamborghini"],
-						Lexus: +r["Lexus"],
-						Maserati: +r["Maserati"],
-						Maybach: +r["Maybach"],
-						'Mercedes Benz': +r["Mercedes Benz"],
-						Porsche: +r["Porsche"],
-						'Rolls Royce': +r["Rolls Royce"],
-						Year: parseTime(r.Year)
+					//return {
+						// 'Aston Martin': +r["Aston Martin"],
+						// 'Aston Martin Frequency': +r["Aston Martin Frequency"],
+						// 'Audi':+r["Audi"],
+						// 'Audi Frequecy':+r["Audi Frequency"],
+						// 'BMW':+r["BMW"],
+						// 'Audi Frequecy':+r["Audi Frequency"],
+						// BMW: +r["BMW"],
+						// Bentley: +r["Bentley"],
+						// Bugatti: +r["Bugatti"],
+						// Cadillac: +r["Cadillac"],
+						// Chevrolet: +r["Chevrolet"],
+						// Ferrari: +r["Ferrari"],
+						// Hummer: +r["Hummer"],
+						// Jaguar: +r["Jaguar"],
+						// Jeep: +r["Jeep"],
+						// Lamborghini: +r["Lamborghini"],
+						// Lexus: +r["Lexus"],
+						// Maserati: +r["Maserati"],
+						// Maybach: +r["Maybach"],
+						// 'Mercedes Benz': +r["Mercedes Benz"],
+						// Porsche: +r["Porsche"],
+						// 'Rolls Royce': +r["Rolls Royce"],
+						//Year: parseTime(r.Year)
+					//}
+					var toReturn = {};
+					for(var prop in r){
+						if(prop != 'Year'){
+							toReturn[prop] = Number(r[prop]);
+						}
 					}
+					toReturn['Year'] = parseTime(r.Year);
+					return toReturn;
 				}
 
-				function parseGDPRow(d){
+				function parseSalesRow(d){
 					return {
 						Year: parseTime(d.Year),
 						Value: +d.Value
@@ -47,42 +60,58 @@
 				//Keeps all of the percent growth data indexed by variable name
 				//(e.g., data['Big Mac Price'] returns the series data for
 				//Big mac prices)
-				var data = {}
+				var valueData = {};
+				var freqData = {};
 
-				function initData(error,carData, gdpData){
-					data['GDP'] = gdpData;
+				function initData(error,carData, salesData){
+					valueData['Album Sales'] = salesData;
 					carData.forEach(function(d){
 						for(var prop in d){
-							if(!data.hasOwnProperty(prop))
-								data[prop] = [];
-							data[prop].push({
-								Year: d.Year,
-								Value: d[prop]
-							});
+							if(prop != 'Year'){
+								if(prop.includes('Frequency')){
+									if(!freqData.hasOwnProperty(prop))
+										freqData[prop] = [];
+									freqData[prop].push({
+										Year: d.Year,
+										Value: d[prop]
+									});
+								}
+								else{
+									if(!valueData.hasOwnProperty(prop))
+										valueData[prop] = [];
+									valueData[prop].push({
+										Year: d.Year,
+										Value: d[prop]
+									});
+								}
+							}
 						}
 					});
-					console.log(data);
-					graphGDP();
+					console.log(valueData);
+					console.log(freqData);
+					graphSales();
+					initBarChart();
+					initFreqChart();
 				}
 
-				//Graphs US GDP
-				function graphGDP(){
-					gdpData = data['GDP'];
+				//Graphs Album Sales in the US
+				function graphSales(){
+					salesData = valueData['Album Sales'];
 					//Initialize axes
 					var xAxis = d3.scaleTime()
-									.domain(d3.extent(gdpData, function(d){return d.Year;}))
+									.domain(d3.extent(salesData, function(d){return d.Year;}))
 									.rangeRound([20,680]);
 					var yAxis = d3.scaleLinear()
-									.domain(d3.extent(gdpData, function(d){return d.Value;}))
+									.domain(d3.extent(salesData, function(d){return d.Value;}))
 									.rangeRound([680,20]);
-					//Path generator for line plot of gdp over time				
+					//Path generator for line plot of album sales over time				
 					var line = d3.line()
 					    .x(function(d) { return xAxis(d.Year); })
 					    .y(function(d) { return yAxis(d.Value); });
 
 					//Draws line plot
 					lineChart.append("path")
-						      .datum(gdpData)
+						      .datum(salesData)
 						      .attr("fill", "none")
 						      .attr("stroke", "steelblue")
 						      .attr("stroke-linejoin", "round")
@@ -99,31 +128,14 @@
 				      .call(d3.axisLeft(yAxis))
 				}
 
-				//Updates global data variable with data from given
-				//csv file
-				// function initData(filename, varName){
-				// 	var parsedFile = d3.csv(filename, function(d){
-				// 		return {
-				// 			Year: parseTime(d.Year),
-				// 			Growth: +d.Growth
-				// 		};
-				// 	}, 
-				// 	function(parsedFile){
-				// 		console.log(parsedFile);
-				// 		if(varName == 'GDP')
-				// 			graphGDP(parsedFile);
-				// 		data[varName] = parsedFile;
-				// 	});
-				// }
-
-				//Graphs [varName] and US GDP over time
+				//Graphs [varName] and US Album sales over time
 				function plotLine(varName){
 					//Clears the line chart svg
 					lineChart.selectAll('*').remove();
 					console.log('plotting line');
-					var gdpData = data['GDP'];
-					var varData = data[varName];
-					//Time range specified by variable data
+					var salesData = valueData['Album Sales'];
+					var varData = valueData[varName];
+					//Time range specified by variable valueData
 					var xAxis = d3.scaleTime()
 									.domain(d3.extent(varData, function(d){return d.Year;}))
 									.rangeRound([20,680]);
@@ -131,12 +143,12 @@
 					//the variable to be plotted
 					var yAxis = d3.scaleLinear()
 							.rangeRound([680,20]);
-					var gdpMin = d3.min(gdpData, function(d){return d.Value;});
-					var gdpMax = d3.max(gdpData, function(d){return d.Value;});
+					var salesMin = d3.min(salesData, function(d){return d.Value;});
+					var salesMax = d3.max(salesData, function(d){return d.Value;});
 					var varMin = d3.min(varData, function(d){return d.Value;});
 					var varMax = d3.max(varData, function(d){return d.Value;});
-					if(gdpMin < varMin || gdpMax > varMax){
-						yAxis.domain([gdpMin, gdpMax]);
+					if(salesMin < varMin || salesMax > varMax){
+						yAxis.domain([salesMin, salesMax]);
 					}
 					else{
 						yAxis.domain([varMin, varMax]);
@@ -147,9 +159,9 @@
 					    .x(function(d) { return xAxis(d.Year); })
 					    .y(function(d) { return yAxis(d.Value); });
 
-					//Draw gdp line plot
+					//Draw album sales line plot
 					lineChart.append("path")
-						      .datum(gdpData)
+						      .datum(salesData)
 						      .attr("fill", "none")
 						      .attr("stroke", "steelblue")
 						      .attr("stroke-linejoin", "round")
@@ -177,32 +189,19 @@
 
 				}
 
-				function dataByYear(year){
+				//Gets values for every car for the given year
+				function valueDataByYear(year){
 					console.log(year);
 					toReturn = [];
-					console.log(data);
-					// data.forEach(
-					// 	function(varData, i){
-					// 		// varData.forEach(
-					// 		// 	function(d){
-					// 		// 		if(d.Year == year){
-					// 		// 			toReturn.push({
-					// 		// 				Name: i; //Check API
-					// 		// 				Growth: d.Growth;
-					// 		// 			})
-					// 		// 		}
-					// 		// });
-					// 		console.log(i);
-							
-					// });
-					for(var series in data){
-						console.log(data[series]);
-						data[series].forEach(
+					console.log(valueData);
+					for(var series in valueData){
+						console.log(valueData[series]);
+						valueData[series].forEach(
 							function(seriesPoint){
 								if(seriesPoint.Year.getFullYear() == year){
 									var toPush = {
 										Name: series,
-										Growth: seriesPoint.Growth
+										Value: seriesPoint.Value
 									};
 									console.log(toPush);
 									toReturn.push(toPush);
@@ -228,76 +227,145 @@
 
 				var lengthScale;
 
+				//Returns a symmetric minimum and maximum based on valueData
 				function fullDataExtent(){
 					var minimums = [];
 					var maximums = [];
 					var toReturn = [];
-					for(var series in data){
-						var growths = data[series].map(function(point){return point.Growth;})
-						minimums.push(d3.min(growths));
-						maximums.push(d3.max(growths));
+					for(var series in valueData){
+						var values = valueData[series].map(function(point){return point.Value;})
+						minimums.push(d3.min(values));
+						maximums.push(d3.max(values));
 					}
 					toReturn.push(d3.min(minimums));
 					toReturn.push(d3.max(maximums));
 					console.log(toReturn);
+					if(Math.abs(toReturn[0]) > Math.abs(toReturn[1])){
+						toReturn = [-(Math.abs(toReturn[0])), Math.abs(toReturn[0])];
+					}
+					else{
+						toReturn = [-(Math.abs(toReturn[1])), Math.abs(toReturn[1])];
+					}
 					return toReturn;
 				}
 
 				//Plots bars based on growth rate for [year]
 				function createBars(year){
-					var growthScale = d3.scaleLinear()
-										.domain([-16, 16])
+					var valueScale = d3.scaleLinear()
+										.domain(fullDataExtent())
 										.range([-350, 350]);
-					var rectData = dataByYear(year);
-					console.log(rectData);
+					var barData = valueDataByYear(year);
+					console.log(barData);
 					var heightScale = d3.scaleLinear()
-										.domain([0,rectData.length-1])
+										.domain([0,barData.length-1])
 										.range([650,50]);
 					console.log(lengthScale(0));
-					rectData.forEach(
+					barData.forEach(
 						function(d, i){
-							rectChart.append('line')
+							barChart.append('line')
 									.attr('x1', lengthScale(0))
 									.attr('y1', heightScale(i))
-									.attr('x2', lengthScale(growthScale(d.Growth)))
+									.attr('x2', lengthScale(valueScale(d.Value)))
 									.attr('y2', heightScale(i))
-									.style('stroke', colorScale(lengthScale(d.Growth)))
-									.style('stroke-width', 10)
+									.style('stroke', colorScale(valueScale(d.Value)))
+									.style('stroke-width', 30)
 						}
 					)
 				}
 
-				//Draws the midline for the rect chart
-				function initRectChart(){
+				//Draws the midline for the bar chart
+				function initBarChart(){
 					lengthScale = d3.scaleLinear()
 										.domain([-350, 350])
 										.range([0, 700]);
-					rectChart.append('line')
+					barChart.append('line')
 							.attr('x1', lengthScale(0))
 							.attr('y1', 0)
 							.attr('x2', lengthScale(0))
 							.attr('y2', 700)
 							.style('stroke', 'black')
 							.style('stroke-width', 1.5);
-					createBars(1995);
+					createBars(1994);
 				}
+
+				/****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
+				function getFreqDataByYear(year){
+					console.log(year);
+					toReturn = [];
+					//console.log(valueData);
+					for(var series in freqData){
+						console.log(freqData[series]);
+						freqData[series].forEach(
+							function(seriesPoint){
+								if(seriesPoint.Year.getFullYear() == year){
+									var toPush = {
+										Name: series,
+										Value: seriesPoint.Value
+									};
+									console.log(toPush);
+									toReturn.push(toPush);
+								}
+							}
+						);
+					}
+					return toReturn;
+				}
+
+				function createFreqBars(year){
+					var barData = getFreqDataByYear(year);
+					var freqPosScale = d3.scaleLinear()
+										.domain([0,barData.length-1])
+										.range([650,50]);
+					var freqLengthScale = d3.scaleLinear()
+										.domain(d3.extent(barData, function(d){return d.Value}))
+										.range([20,600]);
+					barData.forEach(
+						function(d, i){
+							var endpoint = freqLengthScale(d.Value)+21.5;
+							freqChart.append('rect')
+									.attr('width', freqLengthScale(d.Value))
+									.attr('height', 34)
+									.attr('x', 21.5)
+									.attr('y', freqPosScale(i))
+									.style('fill', 'steelblue')
+									.style('stroke', 'white')
+							freqChart.append('text')
+									.attr('width', 60)
+									.attr('height', 34)
+									.attr('x', endpoint)
+									.attr('y', freqPosScale(i)+20	)
+									.text(d.Name);
+
+
+
+									// .attr('x1', freqLengthScale(0))
+									// .attr('y1', freqHeightScale(i))
+									// .attr('x2', freqLengthScale(d.Value)
+									// .attr('y2', freqHeightScale(i))
+									// .style('stroke', ''))
+									// .style('stroke-width', 30)
+						}
+					);
+				}
+
+				function initFreqChart(){
+					freqChart.append('line')
+							.attr('x1', 20)
+							.attr('y1', 0)
+							.attr('x2', 20)
+							.attr('y2', 700)
+							.style('stroke', 'black')
+							.style('stroke-width', 1.5);
+					createFreqBars(1994);
+				}
+
 
 
 				var q = d3.queue();
 
-				//q.defer(initData, 'gdp.csv', 'GDP');
-
-				q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
-					.defer(d3.csv, 'album_sales.csv', parseGDPRow)
+				q.defer(d3.csv, 'Car_Rap_Percentages(2).csv', parseCarRow)
+					.defer(d3.csv, 'album_sales.csv', parseSalesRow)
 					.await(initData);
-					//.await(function(error, carData, gdpata){console.log(carData1); console.log(carData2)})
-					//q.defer(initRectChart);
-				// q.awaitAll(function(error, data1, data2, data3){
-				// 	console.log('here');
-				// 	if (error) throw error
-				// 	console.log('hello');
-				// 	initRectChart();
-				// });
 
 				
 
