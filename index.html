@@ -7,9 +7,11 @@
 	<body>
 		<p>
 			<svg id="line-chart" width='700' height='700'/>
+			<svg id="rect-chart" width='700' height='700'>
 			<script>
 				console.log('starting');
 				var lineChart = d3.select('#line-chart');
+				var rectChart = d3.select('#rect-chart');
 				var parseTime = d3.timeParse('%Y');
 
 				//Keeps all of the percent growth data indexed by variable name
@@ -19,16 +21,19 @@
 
 				//Graphs US GDP
 				var graphGDP = function(gdpData){
+					//Initialize axes
 					var xAxis = d3.scaleTime()
 									.domain(d3.extent(gdpData, function(d){return d.Year;}))
 									.rangeRound([20,680]);
 					var yAxis = d3.scaleLinear()
 									.domain(d3.extent(gdpData, function(d){return d.Growth;}))
 									.rangeRound([680,20]);
+					//Path generator for line plot of gdp over time				
 					var line = d3.line()
 					    .x(function(d) { return xAxis(d.Year); })
 					    .y(function(d) { return yAxis(d.Growth); });
 
+					//Draws line plot
 					lineChart.append("path")
 						      .datum(gdpData)
 						      .attr("fill", "none")
@@ -37,6 +42,7 @@
 						      .attr("stroke-linecap", "round")
 						      .attr("stroke-width", 1.5)
 						      .attr("d", line);
+					//Draws axes	      
 					 lineChart.append("g")
 				      .attr("transform", "translate(0,680)")
 				      .call(d3.axisBottom(xAxis))
@@ -65,13 +71,17 @@
 
 				//Graphs [varName] and US GDP over time
 				function plotLine(varName){
+					//Clears the line chart svg
 					lineChart.selectAll('*').remove();
 					console.log('plotting line');
 					var gdpData = data['GDP'];
 					var varData = data[varName];
+					//Time range specified by variable data
 					var xAxis = d3.scaleTime()
 									.domain(d3.extent(varData, function(d){return d.Year;}))
 									.rangeRound([20,680]);
+					//Initializes yAxis with the greatest range between gdp and
+					//the variable to be plotted
 					var yAxis = d3.scaleLinear()
 							.rangeRound([680,20]);
 					var gdpMin = d3.min(gdpData, function(d){return d.Growth;});
@@ -85,10 +95,12 @@
 						yAxis.domain([varMin, varMax]);
 					}
 
+					//Path generator for line plot
 					var line = d3.line()
 					    .x(function(d) { return xAxis(d.Year); })
 					    .y(function(d) { return yAxis(d.Growth); });
 
+					//Draw gdp line plot
 					lineChart.append("path")
 						      .datum(gdpData)
 						      .attr("fill", "none")
@@ -98,6 +110,7 @@
 						      .attr("stroke-width", 1.5)
 						      .attr("d", line);
 
+					//Draw variable line plot
 					lineChart.append("path")
 						      .datum(varData)
 						      .attr("fill", "none")
@@ -106,23 +119,136 @@
 						      .attr("stroke-linecap", "round")
 						      .attr("stroke-width", 1.5)
 						      .attr("d", line);
-
+					//Draw axes	      
 					 lineChart.append("g")
 				      .attr("transform", "translate(0,680)")
 				      .call(d3.axisBottom(xAxis))
 
 				  	lineChart.append("g")
 				  	.attr("transform", "translate(20,0)")
-				      .call(d3.axisLeft(yAxis))
+				     .call(d3.axisLeft(yAxis))
 
 				}
 
+				function dataByYear(year){
+					console.log(year);
+					toReturn = [];
+					console.log(data);
+					// data.forEach(
+					// 	function(varData, i){
+					// 		// varData.forEach(
+					// 		// 	function(d){
+					// 		// 		if(d.Year == year){
+					// 		// 			toReturn.push({
+					// 		// 				Name: i; //Check API
+					// 		// 				Growth: d.Growth;
+					// 		// 			})
+					// 		// 		}
+					// 		// });
+					// 		console.log(i);
+							
+					// });
+					for(var series in data){
+						console.log(data[series]);
+						data[series].forEach(
+							function(seriesPoint){
+								if(seriesPoint.Year.getFullYear() == year){
+									var toPush = {
+										Name: series,
+										Growth: seriesPoint.Growth
+									};
+									console.log(toPush);
+									toReturn.push(toPush);
+								}
+							}
+						);
+					}
+					return toReturn;
+				}
 
-				d3.queue()
-					.defer(initData, 'gdp.csv', 'GDP')
-					.defer(initData, 'BigMac.csv', "Big Mac Price")
-					.defer(initData, 'BoxOfficeSales.csv', 'Box Office Sales')
-					.await(function(error){console.log('all done');});
+				//color based on sign of [n]
+				function colorScale(n){
+					if(n > 0){
+						return 'green';
+					}
+					else if(n < 0){
+						return 'red';
+					}
+					else{
+						return 'black';
+					}
+				}
+
+				var lengthScale;
+
+				function fullDataExtent(){
+					var minimums = [];
+					var maximums = [];
+					var toReturn = [];
+					for(var series in data){
+						var growths = data[series].map(function(point){return point.Growth;})
+						minimums.push(d3.min(growths));
+						maximums.push(d3.max(growths));
+					}
+					toReturn.push(d3.min(minimums));
+					toReturn.push(d3.max(maximums));
+					console.log(toReturn);
+					return toReturn;
+				}
+
+				//Plots bars based on growth rate for [year]
+				function createBars(year){
+					var growthScale = d3.scaleLinear()
+										.domain([-16, 16])
+										.range([-350, 350]);
+					var rectData = dataByYear(year);
+					console.log(rectData);
+					var heightScale = d3.scaleLinear()
+										.domain([0,rectData.length-1])
+										.range([650,50]);
+					console.log(lengthScale(0));
+					rectData.forEach(
+						function(d, i){
+							rectChart.append('line')
+									.attr('x1', lengthScale(0))
+									.attr('y1', heightScale(i))
+									.attr('x2', lengthScale(growthScale(d.Growth)))
+									.attr('y2', heightScale(i))
+									.style('stroke', colorScale(lengthScale(d.Growth)))
+									.style('stroke-width', 10)
+						}
+					)
+				}
+
+				//Draws the midline for the rect chart
+				function initRectChart(){
+					lengthScale = d3.scaleLinear()
+										.domain([-350, 350])
+										.range([0, 700]);
+					rectChart.append('line')
+							.attr('x1', lengthScale(0))
+							.attr('y1', 0)
+							.attr('x2', lengthScale(0))
+							.attr('y2', 700)
+							.style('stroke', 'black')
+							.style('stroke-width', 1.5);
+					createBars(1995);
+				}
+
+
+				var q = d3.queue();
+
+					q.defer(initData, 'gdp.csv', 'GDP');
+					q.defer(initData, 'BigMac.csv', "Big Mac Price");
+					q.defer(initData, 'BoxOfficeSales.csv', 'Box Office Sales');
+					q.defer(initData, 'cyclist-injuries.csv', 'Cyclist Injuries');
+					//q.defer(initRectChart);
+				// q.awaitAll(function(error, data1, data2, data3){
+				// 	console.log('here');
+				// 	if (error) throw error
+				// 	console.log('hello');
+				// 	initRectChart();
+				// });
 
 				
 
