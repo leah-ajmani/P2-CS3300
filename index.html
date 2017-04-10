@@ -13,25 +13,72 @@
 				var lineChart = d3.select('#line-chart');
 				var rectChart = d3.select('#rect-chart');
 				var parseTime = d3.timeParse('%Y');
+				function parseCarRow(r){
+					return {
+						'Aston Martin': +r["Aston Martin"],
+						Audi:+r["Audi"],
+						BMW: +r["BMW"],
+						Bentley: +r["Bentley"],
+						Bugatti: +r["Bugatti"],
+						Cadillac: +r["Cadillac"],
+						Chevrolet: +r["Chevrolet"],
+						Ferrari: +r["Ferrari"],
+						Hummer: +r["Hummer"],
+						Jaguar: +r["Jaguar"],
+						Jeep: +r["Jeep"],
+						Lamborghini: +r["Lamborghini"],
+						Lexus: +r["Lexus"],
+						Maserati: +r["Maserati"],
+						Maybach: +r["Maybach"],
+						'Mercedes Benz': +r["Mercedes Benz"],
+						Porsche: +r["Porsche"],
+						'Rolls Royce': +r["Rolls Royce"],
+						Year: parseTime(r.Year)
+					}
+				}
+
+				function parseGDPRow(d){
+					return {
+						Year: parseTime(d.Year),
+						Value: +d.Value
+					}
+				}
 
 				//Keeps all of the percent growth data indexed by variable name
 				//(e.g., data['Big Mac Price'] returns the series data for
 				//Big mac prices)
 				var data = {}
 
+				function initData(error,carData, gdpData){
+					data['GDP'] = gdpData;
+					carData.forEach(function(d){
+						for(var prop in d){
+							if(!data.hasOwnProperty(prop))
+								data[prop] = [];
+							data[prop].push({
+								Year: d.Year,
+								Value: d[prop]
+							});
+						}
+					});
+					console.log(data);
+					graphGDP();
+				}
+
 				//Graphs US GDP
-				var graphGDP = function(gdpData){
+				function graphGDP(){
+					gdpData = data['GDP'];
 					//Initialize axes
 					var xAxis = d3.scaleTime()
 									.domain(d3.extent(gdpData, function(d){return d.Year;}))
 									.rangeRound([20,680]);
 					var yAxis = d3.scaleLinear()
-									.domain(d3.extent(gdpData, function(d){return d.Growth;}))
+									.domain(d3.extent(gdpData, function(d){return d.Value;}))
 									.rangeRound([680,20]);
 					//Path generator for line plot of gdp over time				
 					var line = d3.line()
 					    .x(function(d) { return xAxis(d.Year); })
-					    .y(function(d) { return yAxis(d.Growth); });
+					    .y(function(d) { return yAxis(d.Value); });
 
 					//Draws line plot
 					lineChart.append("path")
@@ -54,20 +101,20 @@
 
 				//Updates global data variable with data from given
 				//csv file
-				function initData(filename, varName){
-					var parsedFile = d3.csv(filename, function(d){
-						return {
-							Year: parseTime(d.Year),
-							Growth: +d.Growth
-						};
-					}, 
-					function(parsedFile){
-						console.log(parsedFile);
-						if(varName == 'GDP')
-							graphGDP(parsedFile);
-						data[varName] = parsedFile;
-					});
-				}
+				// function initData(filename, varName){
+				// 	var parsedFile = d3.csv(filename, function(d){
+				// 		return {
+				// 			Year: parseTime(d.Year),
+				// 			Growth: +d.Growth
+				// 		};
+				// 	}, 
+				// 	function(parsedFile){
+				// 		console.log(parsedFile);
+				// 		if(varName == 'GDP')
+				// 			graphGDP(parsedFile);
+				// 		data[varName] = parsedFile;
+				// 	});
+				// }
 
 				//Graphs [varName] and US GDP over time
 				function plotLine(varName){
@@ -84,10 +131,10 @@
 					//the variable to be plotted
 					var yAxis = d3.scaleLinear()
 							.rangeRound([680,20]);
-					var gdpMin = d3.min(gdpData, function(d){return d.Growth;});
-					var gdpMax = d3.max(gdpData, function(d){return d.Growth;});
-					var varMin = d3.min(varData, function(d){return d.Growth;});
-					var varMax = d3.max(varData, function(d){return d.Growth;});
+					var gdpMin = d3.min(gdpData, function(d){return d.Value;});
+					var gdpMax = d3.max(gdpData, function(d){return d.Value;});
+					var varMin = d3.min(varData, function(d){return d.Value;});
+					var varMax = d3.max(varData, function(d){return d.Value;});
 					if(gdpMin < varMin || gdpMax > varMax){
 						yAxis.domain([gdpMin, gdpMax]);
 					}
@@ -98,7 +145,7 @@
 					//Path generator for line plot
 					var line = d3.line()
 					    .x(function(d) { return xAxis(d.Year); })
-					    .y(function(d) { return yAxis(d.Growth); });
+					    .y(function(d) { return yAxis(d.Value); });
 
 					//Draw gdp line plot
 					lineChart.append("path")
@@ -238,10 +285,12 @@
 
 				var q = d3.queue();
 
-					q.defer(initData, 'gdp.csv', 'GDP');
-					q.defer(initData, 'BigMac.csv', "Big Mac Price");
-					q.defer(initData, 'BoxOfficeSales.csv', 'Box Office Sales');
-					q.defer(initData, 'cyclist-injuries.csv', 'Cyclist Injuries');
+				//q.defer(initData, 'gdp.csv', 'GDP');
+
+				q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
+					.defer(d3.csv, 'album_sales.csv', parseGDPRow)
+					.await(initData);
+					//.await(function(error, carData, gdpata){console.log(carData1); console.log(carData2)})
 					//q.defer(initRectChart);
 				// q.awaitAll(function(error, data1, data2, data3){
 				// 	console.log('here');
