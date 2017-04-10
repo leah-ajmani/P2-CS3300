@@ -14,32 +14,8 @@
 				var barChart = d3.select('#bar-chart');
 				var freqChart = d3.select('#freq-chart');
 				var parseTime = d3.timeParse('%Y');
+				/********************DATA PARSING*************************************/
 				function parseCarRow(r){
-					//return {
-						// 'Aston Martin': +r["Aston Martin"],
-						// 'Aston Martin Frequency': +r["Aston Martin Frequency"],
-						// 'Audi':+r["Audi"],
-						// 'Audi Frequecy':+r["Audi Frequency"],
-						// 'BMW':+r["BMW"],
-						// 'Audi Frequecy':+r["Audi Frequency"],
-						// BMW: +r["BMW"],
-						// Bentley: +r["Bentley"],
-						// Bugatti: +r["Bugatti"],
-						// Cadillac: +r["Cadillac"],
-						// Chevrolet: +r["Chevrolet"],
-						// Ferrari: +r["Ferrari"],
-						// Hummer: +r["Hummer"],
-						// Jaguar: +r["Jaguar"],
-						// Jeep: +r["Jeep"],
-						// Lamborghini: +r["Lamborghini"],
-						// Lexus: +r["Lexus"],
-						// Maserati: +r["Maserati"],
-						// Maybach: +r["Maybach"],
-						// 'Mercedes Benz': +r["Mercedes Benz"],
-						// Porsche: +r["Porsche"],
-						// 'Rolls Royce': +r["Rolls Royce"],
-						//Year: parseTime(r.Year)
-					//}
 					var toReturn = {};
 					for(var prop in r){
 						if(prop != 'Year'){
@@ -57,10 +33,13 @@
 					}
 				}
 
-				//Keeps all of the percent growth data indexed by variable name
-				//(e.g., data['Big Mac Price'] returns the series data for
-				//Big mac prices)
+				//Keeps all of the percent change data indexed by car brand name
+				//(e.g., valueData['Mercedes Benz'] returns the percent change data for
+				//Mercedes Benz)
 				var valueData = {};
+				//Keeps all of the frequency data indexed by car brand name
+				//(e.g., valueData['Mercedes Benz'] returns the number of times
+				//Mercedes Benz was mentioned in rap lyrics
 				var freqData = {};
 
 				function initData(error,carData, salesData){
@@ -91,7 +70,7 @@
 					console.log(freqData);
 					graphSales();
 					initBarChart();
-					initFreqChart();
+					//initFreqChart();
 				}
 
 				//Graphs Album Sales in the US
@@ -189,6 +168,8 @@
 
 				}
 
+				/**************************PERCENT CHANGE BAR CHART****************************/
+
 				//Gets values for every car for the given year
 				function valueDataByYear(year){
 					console.log(year);
@@ -274,6 +255,7 @@
 				}
 
 				//Draws the midline for the bar chart
+				//defaults to percent change chart for 1994
 				function initBarChart(){
 					lengthScale = d3.scaleLinear()
 										.domain([-350, 350])
@@ -289,10 +271,10 @@
 				}
 
 				/****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
+				//Gets frequency of usage for every car brand for given year
 				function getFreqDataByYear(year){
 					console.log(year);
 					toReturn = [];
-					//console.log(valueData);
 					for(var series in freqData){
 						console.log(freqData[series]);
 						freqData[series].forEach(
@@ -313,6 +295,7 @@
 
 				function createFreqBars(year){
 					var barData = getFreqDataByYear(year);
+					//Initializes scales for y position and length of bar
 					var freqPosScale = d3.scaleLinear()
 										.domain([0,barData.length-1])
 										.range([650,50]);
@@ -321,7 +304,9 @@
 										.range([20,600]);
 					barData.forEach(
 						function(d, i){
+							//endpoint of bar; used to position label
 							var endpoint = freqLengthScale(d.Value)+21.5;
+							//Adds bar
 							freqChart.append('rect')
 									.attr('width', freqLengthScale(d.Value))
 									.attr('height', 34)
@@ -329,25 +314,19 @@
 									.attr('y', freqPosScale(i))
 									.style('fill', 'steelblue')
 									.style('stroke', 'white')
+							//Adds label
 							freqChart.append('text')
 									.attr('width', 60)
 									.attr('height', 34)
 									.attr('x', endpoint)
 									.attr('y', freqPosScale(i)+20	)
 									.text(d.Name);
-
-
-
-									// .attr('x1', freqLengthScale(0))
-									// .attr('y1', freqHeightScale(i))
-									// .attr('x2', freqLengthScale(d.Value)
-									// .attr('y2', freqHeightScale(i))
-									// .style('stroke', ''))
-									// .style('stroke-width', 30)
 						}
 					);
 				}
 
+				//Draws left aligned y axis and defaults to a
+				//frequency bar chart for 1994
 				function initFreqChart(){
 					freqChart.append('line')
 							.attr('x1', 20)
