@@ -186,6 +186,12 @@ function graphSales(){
 	lineChart.append("text")
 		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
 		.text("Percent Change");
+	lineChart.append("text")
+		.attr("x", paddingLC*1.4)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in Album Sales Over Time")
+		.style("font-weight","bold")
+		.style("font-size",12);
 }
 
 //Graphs [varName] and US Album sales over time
@@ -256,7 +262,12 @@ function plotLine(varName){
 	lineChart.append("text")
 		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
 		.text("Percent Change");
-
+	lineChart.append("text")
+		.attr("x", paddingLC*1.4)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in Album Sales and "+varName+" Rap Mentions Over Time")
+		.style("font-weight","bold")
+		.style("font-size",12);
 }
 
 /**************************PERCENT CHANGE BAR CHART****************************/
