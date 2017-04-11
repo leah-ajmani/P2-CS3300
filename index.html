@@ -42,6 +42,14 @@
 	.credits{
 		font-size: 12px;
 	}
+	.barOverlay{
+		stroke: white;
+		stroke-width: 15;
+		stroke-opacity: 0.5;
+	}
+	.barOverlay:hover{
+		stroke-opacity: 0;
+	}
 </style>
 </head>
 <body>
@@ -59,14 +67,14 @@
 $(".container").hide();
 
 // DIMENSIONS FOR LINE CHART
-var widthLC = 600
-var heightLC = 400
-var paddingLC = 70
+var widthLC = 600;
+var heightLC = 400;
+var paddingLC = 70;
 
 // DIMENSINOS FOR BAR CHART
-var widthBC = 300
-var heightBC = 400
-var paddingBC = 60
+var widthBC = 300;
+var heightBC = 400;
+var paddingBC = 60;
 
 // SELECT AND EDIT SVG ELEMENTS
 var lineChart = d3.select('#line-chart');
@@ -326,13 +334,28 @@ function createBars(year){
 	console.log(lengthScale(0));
 	barData.forEach(
 		function(d, i){
+			// bar
 			barChart.append('line')
 				.attr('x1', lengthScale(0))
 				.attr('y1', heightScale(i))
 				.attr('x2', lengthScale(valueScale(d.Value)))
 				.attr('y2', heightScale(i))
 				.style('stroke', colorScale(valueScale(d.Value)))
-				.style('stroke-width', 15)
+				.style('stroke-width', 15);
+			// bar text
+			barChart.append("text")
+				.attr("x", paddingBC/1.5)
+				.attr("y", heightScale(i)+4)
+				.style("font-size",8)
+				.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
+				.text(d.Name);
+			// bar overlay
+			barChart.append('line')
+				.attr('x1', 0)
+				.attr('y1', heightScale(i))
+				.attr('x2', widthBC)
+				.attr('y2', heightScale(i))
+				.attr("class","barOverlay")
 				.attr("onmouseover","plotLine('"+d.Name+"')");
 		}
 	)
