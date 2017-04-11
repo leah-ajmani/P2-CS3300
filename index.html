@@ -239,6 +239,15 @@ function plotLine(varName){
 		.attr("transform", "translate("+(paddingLC)+",0)")
 	  .call(d3.axisLeft(yAxis));
 
+	// Label axes
+  lineChart.append("text")
+		.attr("x", (widthLC-20) * 0.5)
+		.attr("y", heightLC - paddingLC/4)
+		.text("Year");
+	lineChart.append("text")
+		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
+		.text("Percent Change");
+
 }
 
 /**************************PERCENT CHANGE BAR CHART****************************/
