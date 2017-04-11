@@ -61,7 +61,7 @@ $(".container").hide();
 // DIMENSIONS FOR LINE CHART
 var widthLC = 600
 var heightLC = 400
-var paddingLC = 50
+var paddingLC = 70
 
 // DIMENSINOS FOR BAR CHART
 var widthBC = 300
@@ -230,6 +230,7 @@ function plotLine(varName){
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
 		      .attr("d", line);
+
 	//Draw axes	      
 	 lineChart.append("g")
     .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
