@@ -66,7 +66,7 @@ var paddingLC = 50
 // DIMENSINOS FOR BAR CHART
 var widthBC = 300
 var heightBC = 400
-var paddingBC = 50
+var paddingBC = 60
 
 // SELECT AND EDIT SVG ELEMENTS
 var lineChart = d3.select('#line-chart');
@@ -324,14 +324,14 @@ function initBarChart(){
 	lengthScale = d3.scaleLinear()
 						.domain([-widthBC/2, widthBC/2])
 						.range([0, widthBC]);
+	createBars(1994);
 	barChart.append('line')
 			.attr('x1', lengthScale(0))
-			.attr('y1', 0)
+			.attr('y1', paddingBC/2)
 			.attr('x2', lengthScale(0))
-			.attr('y2', heightBC)
+			.attr('y2', heightBC-paddingBC/2)
 			.style('stroke', 'black')
-			.style('stroke-width', 1.5);
-	createBars(1994);
+			.style('stroke-width', 1);
 }
 
 /****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
