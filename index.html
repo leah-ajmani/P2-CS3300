@@ -6,6 +6,7 @@
 <script src="http://d3js.org/topojson.v2.min.js"></script>
 <script src="./node_modules/d3-slider/d3.slider.js"></script>
 <!-- <link src="./node_modules/d3-slider/d3.slider.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <style>
@@ -20,8 +21,6 @@
 	svg{
 		background-color: white;
 		border: 1px solid #95a5a6;
-		margin-top: 10px;
-		margin-bottom: 10px;
 	}
 	hr{
 		border: 0;
@@ -29,11 +28,27 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     /*border-bottom: 1px solid rgba(255, 255, 255, 0.3);*/
 	}
+	.graphs{
+		position: fixed;
+		width: 1000px;
+		left: 460px;
+		top: 46px;
+	}
 	.container{
-		margin: 40px auto;
-		max-width: 1000px;
+		margin: 120px 10px 160px;
+		max-width: 380px;
 		padding: 10px 40px 20px;
 		border: 1px solid #ecf0f1;
+		float: left;
+	}
+	.h_spacer{
+		width: 700px;
+		height: 700px;
+		float: left;
+		background-color: black;
+	}
+	.v_spacer{
+		height: 200px;
 	}
 	.word1{
 		color: #3498db;
@@ -59,24 +74,58 @@
 	  stroke-width: 1.25px;
 	  pointer-events: none;
 	}
-
+	.header_positive{
+		color: #d35400;
+	}
+	.header_negative{
+		color: #2980b9;
+	}
+	.header_other{
+		color: #7f8c8d;
+	}
 </style>
 </head>
 <body>
-<div class="container">
-	<h1><span>Do Artists Only </span><span class="word1">Rap </span><br><span>About Reasonably Priced </span><span class="word2">Cars</span><span>?</span></h1>
+	<div class="container">
+		<h1>Do Artists Rap About Cheaper <span class="word2">Cars</span><br> When The <span class="word1">Dow </span><br>is down?</h1>
 
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-	<svg id="line-chart"/>
-	<svg id="bar-chart"/>
-	<svg id="correlation-chart"/>
-	<!-- <svg id="slider"/> -->
-	<!-- <svg id="freq-chart" width='700' height='700'/><br> -->
-	<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
-</div>
+		<div class="v_spacer"></div>
+
+		<h2 class="header_positive">Correlation</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+		<div class="v_spacer"></div>
+
+		<h2 class="header_negative">Inverse Correlation</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+		<div class="v_spacer"></div>
+
+		<h2 class="header_other">Other Interesting Points</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</div>
+
+	<!-- <div class="h_spacer">
+	</div> -->
+
+	<div class="graphs">
+		<svg id="legend"></svg>
+		<svg id="line-chart"/>
+		<!-- <svg id="correlation-chart"/> -->
+		<svg id="bar-chart"/>
+		<!-- <svg id="slider"/> -->
+		<!-- <svg id="freq-chart" width='700' height='700'/> -->
+		<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
+	</div>
+	
 <script>
 // hide page
 $(".container").hide();
+
+// DIMENSIONS FOR LINE CHART
+var widthLeg = 600;
+var heightLeg = 70;
+var paddingLeg = 10;
 
 // DIMENSIONS FOR LINE CHART
 var widthLC = 600;
@@ -89,17 +138,21 @@ var heightBC = 400;
 var paddingBC = 60;
 
 //DIMENSIONS FOR CORRELATION CHART
-var widthCC = 500;
-var heightCC = 300;
-var paddingCC = 50;
+var widthCC = 600;
+var heightCC = 400;
+var paddingCC = 70;
 
 // SELECT AND EDIT SVG ELEMENTS
+var legend = d3.select('#legend');
+legend.attr("width",widthLeg)
+	.attr("height",heightLeg);
+
 var lineChart = d3.select('#line-chart');
 lineChart.attr("width",widthLC)
 	.attr("height",heightLC);
 
 var barChart = d3.select('#bar-chart');
-barChart.attr("width",widthBC)
+barChart.attr("width",widthBC - 170)
 	.attr("height",heightBC);
 // var freqChart = d3.select('#freq-chart');
 var corChart = d3.select('#correlation-chart')
@@ -177,7 +230,7 @@ function graphDow(){
 	lineY = d3.scaleLinear()
 					//.domain(d3.extent(dowData, function(d){return d.Value;}))
 					//.domain(fullDataExtent())
-					.domain([-50,200])
+					.domain([-50,300])
 					.rangeRound([heightLC-paddingLC,paddingLC]);
 	//Path generator for line plot of dow over time				
 	var line = d3.line()
@@ -377,10 +430,10 @@ function initBarChart(){
 			.style('stroke-width', 1);
 
 	// Label axes
-  barChart.append("text")
-		.attr("x", (widthBC-100) * 0.5)
-		.attr("y", heightBC - paddingBC/4)
-		.text("Percent Change");
+  // barChart.append("text")
+		// .attr("x", (widthBC-100) * 0.5)
+		// .attr("y", heightBC - paddingBC/4)
+		// .text("Percent Change");
 	barChart.append("text")
 		.attr("transform", "rotate(270) translate(-230, " + paddingBC/2.5 + ")")
 		.text("Car Make");
