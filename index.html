@@ -4,6 +4,8 @@
 <title>Project 2</title>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="http://d3js.org/topojson.v2.min.js"></script>
+<script src="./node_modules/d3-slider/d3.slider.js"></script>
+<!-- <link src="./node_modules/d3-slider/d3.slider.css" rel="stylesheet"> -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <style>
@@ -50,6 +52,14 @@
 	.barOverlay:hover{
 		stroke-opacity: 0;
 	}
+	.slider .handle {
+	  fill: #fff;
+	  stroke: #000;
+	  stroke-opacity: .5;
+	  stroke-width: 1.25px;
+	  pointer-events: none;
+	}
+
 </style>
 </head>
 <body>
@@ -59,6 +69,8 @@
 	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 	<svg id="line-chart"/>
 	<svg id="bar-chart"/>
+	<svg id="correlation-chart"/>
+	<!-- <svg id="slider"/> -->
 	<!-- <svg id="freq-chart" width='700' height='700'/><br> -->
 	<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
 </div>
@@ -76,6 +88,11 @@ var widthBC = 300;
 var heightBC = 400;
 var paddingBC = 60;
 
+//DIMENSIONS FOR CORRELATION CHART
+var widthCC = 500;
+var heightCC = 300;
+var paddingCC = 50;
+
 // SELECT AND EDIT SVG ELEMENTS
 var lineChart = d3.select('#line-chart');
 lineChart.attr("width",widthLC)
@@ -85,8 +102,11 @@ var barChart = d3.select('#bar-chart');
 barChart.attr("width",widthBC)
 	.attr("height",heightBC);
 // var freqChart = d3.select('#freq-chart');
-var parseTime = d3.timeParse('%Y');
+var corChart = d3.select('#correlation-chart')
+corChart.attr("width", widthCC)
+		.attr("height", heightCC);
 /********************DATA PARSING*************************************/
+var parseTime = d3.timeParse('%Y');
 function parseCarRow(r){
 	var toReturn = {};
 	for(var prop in r){
@@ -114,8 +134,8 @@ var valueData = {};
 //Mercedes Benz was mentioned in rap lyrics
 var freqData = {};
 
-function initData(error,carData, salesData){
-	valueData['Album Sales'] = salesData;
+function initData(error,carData, dowData){
+	valueData['Dow'] = dowData;
 	carData.forEach(function(d){
 		for(var prop in d){
 			if(prop != 'Year'){
@@ -140,43 +160,49 @@ function initData(error,carData, salesData){
 	});
 	console.log(valueData);
 	console.log(freqData);
-	graphSales();
+	graphDow();
 	initBarChart();
 	//initFreqChart();
 }
 
-//Graphs Album Sales in the US
-function graphSales(){
-	salesData = valueData['Album Sales'];
+/******************LINE CHART******************************/
+var lineX, lineY;
+//Graphs DOW average in the US
+function graphDow(){
+	dowData = valueData['Dow'];
 	//Initialize axes
-	var xAxis = d3.scaleTime()
-					.domain(d3.extent(salesData, function(d){return d.Year;}))
+	lineX = d3.scaleTime()
+					.domain(d3.extent(dowData, function(d){return d.Year;}))
 					.rangeRound([paddingLC,widthLC-paddingLC]);
-	var yAxis = d3.scaleLinear()
-					.domain(d3.extent(salesData, function(d){return d.Value;}))
+	lineY = d3.scaleLinear()
+					//.domain(d3.extent(dowData, function(d){return d.Value;}))
+					//.domain(fullDataExtent())
+					.domain([-50,200])
 					.rangeRound([heightLC-paddingLC,paddingLC]);
-	//Path generator for line plot of album sales over time				
+	//Path generator for line plot of dow over time				
 	var line = d3.line()
-	    .x(function(d) { return xAxis(d.Year); })
-	    .y(function(d) { return yAxis(d.Value); });
+		.curve(d3.curveBasis)
+	    .x(function(d) { return lineX(d.Year); })
+	    .y(function(d) { return lineY(d.Value); });
 
 	//Draws line plot
 	lineChart.append("path")
-		      .datum(salesData)
+		      .datum(dowData)
 		      .attr("fill", "none")
 		      .attr("stroke", "#3498db")
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
 		      .attr("d", line);
+	
 	//Draws axes	      
 	lineChart.append("g")
     .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
-    .call(d3.axisBottom(xAxis))
+    .call(d3.axisBottom(lineX))
 
 	lineChart.append("g")
 		.attr("transform", "translate("+(paddingLC)+",0)")
-    .call(d3.axisLeft(yAxis))
+    .call(d3.axisLeft(lineY))
 
   // Label axes
   lineChart.append("text")
@@ -189,52 +215,29 @@ function graphSales(){
 	lineChart.append("text")
 		.attr("x", paddingLC*1.4)
 		.attr("y", paddingLC/2)
-		.text("Percent Change in Album Sales Over Time")
+		//.text("Percent Change in Album Sales Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
+
 }
 
-//Graphs [varName] and US Album sales over time
+
+
+//Graphs [varName] and Dow Industrial Average over time to the main
+//line chart
 function plotLine(varName){
 	//Clears the line chart svg
 	lineChart.selectAll('*').remove();
-	console.log('plotting line');
-	var salesData = valueData['Album Sales'];
+	graphDow();
+	if(varName == 'Dow'){
+		return;
+	}
 	var varData = valueData[varName];
-	//Time range specified by variable valueData
-	var xAxis = d3.scaleTime()
-					.domain(d3.extent(varData, function(d){return d.Year;}))
-					.rangeRound([paddingLC,widthLC-paddingLC]);
-	//Initializes yAxis with the greatest range between gdp and
-	//the variable to be plotted
-	var yAxis = d3.scaleLinear()
-			.rangeRound([heightLC-paddingLC,paddingLC]);
-	var salesMin = d3.min(salesData, function(d){return d.Value;});
-	var salesMax = d3.max(salesData, function(d){return d.Value;});
-	var varMin = d3.min(varData, function(d){return d.Value;});
-	var varMax = d3.max(varData, function(d){return d.Value;});
-	if(salesMin < varMin || salesMax > varMax){
-		yAxis.domain([salesMin, salesMax]);
-	}
-	else{
-		yAxis.domain([varMin, varMax]);
-	}
-
-	//Path generator for line plot
 	var line = d3.line()
-	    .x(function(d) { return xAxis(d.Year); })
-	    .y(function(d) { return yAxis(d.Value); });
-
-	//Draw album sales line plot
-	lineChart.append("path")
-		      .datum(salesData)
-		      .attr("fill", "none")
-		      .attr("stroke", "#3498db")
-		      .attr("stroke-linejoin", "round")
-		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 1.5)
-		      .attr("d", line);
-
+		.curve(d3.curveBasis)
+	    .x(function(d) { return lineX(d.Year); })
+	    .y(function(d) { return lineY(d.Value); });
+	
 	//Draw variable line plot
 	lineChart.append("path")
 		      .datum(varData)
@@ -245,27 +248,11 @@ function plotLine(varName){
 		      .attr("stroke-width", 1.5)
 		      .attr("d", line);
 
-	//Draw axes	      
-	 lineChart.append("g")
-    .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
-    .call(d3.axisBottom(xAxis));
-
-	lineChart.append("g")
-		.attr("transform", "translate("+(paddingLC)+",0)")
-	  .call(d3.axisLeft(yAxis));
-
-	// Label axes
-  lineChart.append("text")
-		.attr("x", (widthLC-20) * 0.5)
-		.attr("y", heightLC - paddingLC/4)
-		.text("Year");
-	lineChart.append("text")
-		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
-		.text("Percent Change");
+	//Draw axes
 	lineChart.append("text")
 		.attr("x", paddingLC*1.4)
 		.attr("y", paddingLC/2)
-		.text("Percent Change in Album Sales and "+varName+" Rap Mentions Over Time")
+		.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
 }
@@ -317,8 +304,10 @@ function fullDataExtent(){
 	var toReturn = [];
 	for(var series in valueData){
 		var values = valueData[series].map(function(point){return point.Value;})
+		console.log(series)
 		minimums.push(d3.min(values));
 		maximums.push(d3.max(values));
+		console.log(d3.max(values));
 	}
 	toReturn.push(d3.min(minimums));
 	toReturn.push(d3.max(maximums));
@@ -397,6 +386,136 @@ function initBarChart(){
 		.text("Car Make");
 }
 
+/***************************CORRELATION CHART*************************************/
+function dataAtYearRange(data, timeRange){
+	var toReturn = [];
+	data.forEach(function(d){
+		console.log(d);
+		if(d.Year.getFullYear() >= timeRange[0] && 
+			d.Year.getFullYear() <= timeRange[1]){
+			console.log(d.Year);
+			toReturn.push(d);
+		}
+	});
+	return toReturn;
+}
+
+function plotCorLine(varName, color, yExtent){
+	//Clears the line chart svg
+	//corChart.selectAll('*').remove();
+	var varData = dataAtYearRange(valueData[varName], [2006, 2012]);
+	console.log(varData);
+	corX = d3.scaleTime()
+					.domain([parseTime(2006), parseTime(2012)])
+					.rangeRound([paddingCC, widthCC-paddingCC]);
+	console.log('cor line');
+	console.log(corX(parseTime(2006)));
+	corY = d3.scaleLinear()
+					.domain(yExtent)
+					.rangeRound([heightCC-paddingCC, paddingCC]);
+
+	var line = d3.line()
+		.curve(d3.curveBasis)
+	    .x(function(d) { return corX(d.Year); })
+	    .y(function(d) { return corY(d.Value); });
+	
+	//Draw variable line plot
+	corChart.append("path")
+		      .datum(varData)
+		      .attr("fill", "none")
+		      .attr("stroke", color)
+		      .attr("stroke-linejoin", "round")
+		      .attr("stroke-linecap", "round")
+		      .attr("stroke-width", 1.5)
+		      .attr("d", line);
+
+	//Draw axes
+	corChart.append("g")
+    .attr("transform", "translate(0,"+(heightCC-paddingCC)+")")
+    .call(d3.axisBottom(corX))
+
+	corChart.append("g")
+		.attr("transform", "translate("+(paddingCC)+",0)")
+    .call(d3.axisLeft(corY))
+	// Label axes
+  	corChart.append("text")
+		.attr("x", (widthCC-20) * 0.5)
+		.attr("y", heightCC - paddingCC/4)
+		.text("Year");
+	corChart.append("text")
+		.attr("transform", "rotate(270) translate(-250, " + paddingCC/2.5 + ")")
+		.text("Percent Change");
+	corChart.append("text")
+		.attr("x", paddingCC*1.4)
+		.attr("y", paddingCC/2)
+		//.text("Percent Change in Album Sales Over Time")
+		.style("font-weight","bold")
+		.style("font-size",12);
+
+	corChart.append("text")
+		.attr("x", paddingCC*1.4)
+		.attr("y", paddingCC/2)
+		//.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
+		//.style("font-weight","bold")
+		//.style("font-size",12);
+}
+
+function findYExtent(brands){
+	var minimums = [];
+	var maximums = [];
+	var toReturn = [];
+	for(var series in valueData){
+		if(brands.includes(series)){
+			var values = valueData[series].map(function(point){return point.Value;})
+			console.log(series)
+			minimums.push(d3.min(values));
+			maximums.push(d3.max(values));
+			console.log(d3.max(values));
+		}
+	}
+	toReturn.push(d3.min(minimums));
+	toReturn.push(d3.max(maximums));
+	console.log(toReturn);
+	if(Math.abs(toReturn[0]) > Math.abs(toReturn[1])){
+		toReturn = [-(Math.abs(toReturn[0])), Math.abs(toReturn[0])];
+	}
+	else{
+		toReturn = [-(Math.abs(toReturn[1])), Math.abs(toReturn[1])];
+	}
+	return toReturn;
+}
+
+function plotInvCorrelation(){
+	corChart.selectAll('*').remove();
+	var invBrands = ["Dow", "Rolls Royce", "Maserati", "Bugatti"];
+	var invColors = ['steelblue', 'red', 'green', 'purple'];
+	var yExtent = findYExtent(invBrands);
+	var invColorScale = d3.scaleOrdinal()
+							.domain(invBrands)
+							.range(invColors);
+	invBrands.forEach(function(b){
+		console.log(b);
+		console.log(invColorScale(b))
+		plotCorLine(b, invColorScale(b), yExtent);
+	})
+}
+
+function plotPosCorrelation(){
+	corChart.selectAll('*').remove();
+	var posBrands = ["Dow", "Chevrolet", "Porsche", "Jeep"];
+	var posColors = ['steelblue', 'orange', 'brown', 'yellow'];
+	var yExtent = findYExtent(posBrands);
+	var posColorScale = d3.scaleOrdinal()
+							.domain(posBrands)
+							.range(posColors);
+	posBrands.forEach(function(b){
+		console.log(b);
+		console.log(posColorScale(b))
+		plotCorLine(b, posColorScale(b), yExtent);
+	})
+
+}
+
 /****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
 //Gets frequency of usage for every car brand for given year
 function getFreqDataByYear(year){
@@ -467,8 +586,8 @@ function initFreqChart(){
 
 var q = d3.queue();
 
-q.defer(d3.csv, 'Car_Rap_Percentages(2).csv', parseCarRow)
-	.defer(d3.csv, 'album_sales.csv', parseSalesRow)
+q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
+	.defer(d3.csv, 'dow.csv', parseSalesRow)
 	.await(initData);
 
 $(document).ready(function() {
