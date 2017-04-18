@@ -328,7 +328,10 @@ function plotCurr(){
 function plotAll(currVar, is_clicked){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	console.log(currVar);
+	linePlotColorScale = d3.scaleOrdinal()
+							.domain(toPlot)
+							.range(d3.schemeCategory20);
+	console.log(toPlot);
 	if(is_clicked){
 		// if(selected.includes(currVar)){
 		// 	var index = toPlot.indexOf(currVar);
@@ -392,7 +395,7 @@ function plotLine(varName){
 	lineChart.append("text")
 		.attr("x", paddingLC*1.4)
 		.attr("y", paddingLC/2)
-		.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
+		.text("Percent Change in DOW and Rap Mentions Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
 
