@@ -623,6 +623,12 @@ function highlight(varName){
 			.attr('stroke-width', 3);
 }
 
+function dehighlight(){
+	lineChart.selectAll('.corLine')
+			.attr('stroke-opacity', 1)
+			.attr('stroke-width', 1.5)
+}
+
 function findYExtent(brands){
 	var minimums = [];
 	var maximums = [];
@@ -730,7 +736,8 @@ function generateSelectionChart(brands){
 					.style("font-size",8)
 					.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
 					.text(d)
-					.attr("onmouseover","highlight('"+d+"')");
+					.attr("onmouseover","highlight('"+d+"')")
+					.attr("onmouseout", "dehighlight()")
 	});
 
 	barChart.append("text")
