@@ -220,6 +220,11 @@ function initData(error,carData, dowData){
 
 /******************LINE CHART******************************/
 var lineX, lineY;
+var toPlot = ["Dow"];
+var selected = [];
+var linePlotColorScale = d3.scaleOrdinal()
+							.domain(toPlot)
+							.range(d3.schemeCategory20);
 
 function start(){
 	lineChart.selectAll('*').remove();
@@ -281,9 +286,9 @@ function graphDow(){
 		.style("font-size",12);
 
 	//Legend
-	var lineChartScale = d3.scaleOrdinal()
-						.domain(['Dow', "Car Brand"])
-						.range(['#3498db', "#9b59b6"]);
+	// var lineChartScale = d3.scaleOrdinal()
+	// 					.domain(['Dow', "Car Brand"])
+	// 					.range(['#3498db', "#9b59b6"]);
 	legend.append('g')
 	  .attr("class", "legendSymbol")
 	  .attr('fill', 'black')
@@ -292,7 +297,7 @@ function graphDow(){
 	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
 
 	var legendPath = d3.legendColor()
-	  .scale(lineChartScale)
+	  .scale(linePlotColorScale)
 	  .shape('circle')
 	  .shapePadding(paddingLeg)
 	  .orient("horizontal");
@@ -300,6 +305,56 @@ function graphDow(){
 	legend.select(".legendSymbol")
 	  .call(legendPath);
 
+	// console.log('here');
+	// console.log(legend.selectAll(".cell")
+	// 	.selectAll('.label').each(function(d){console.log(d);}));
+
+}
+
+function plotCurr(){
+	//console.log(toAdd);
+	//toPlot.push(toAdd);
+	console.log(toPlot);
+	toPlot.forEach(function(p){
+		if(p == "Dow"){
+			//graphDow();
+		}
+		else{
+			plotLine(p, false);
+		}
+	})
+}
+
+function plotAll(currVar, is_clicked){
+	lineChart.selectAll('*').remove();
+	legend.selectAll('*').remove();
+	console.log(currVar);
+	if(is_clicked){
+		// if(selected.includes(currVar)){
+		// 	var index = toPlot.indexOf(currVar);
+		// 	toPlot.splice(index, 1);
+		// 	index = selected.indexOf(currVar);
+		// 	selected.splice(index,1)
+		// }
+		if(toPlot.includes(currVar)){
+			var index = toPlot.indexOf(currVar);
+			toPlot.splice(index, 1);
+		}
+		else{
+			toPlot.push(currVar);
+		}
+	}
+	else{
+		plotLine(currVar);
+	}
+	toPlot.forEach(function(p){
+		if(p == "Dow"){
+			graphDow();
+		}
+		else{
+			plotLine(p);
+		}
+	})
 }
 
 
@@ -308,8 +363,11 @@ function graphDow(){
 //line chart
 function plotLine(varName){
 	//Clears the line chart svg
-	lineChart.selectAll('*').remove();
-	graphDow();
+	//lineChart.selectAll('*').remove();
+	//graphDow();
+	//plotCurr();
+	
+
 	if(varName == 'Dow'){
 		return;
 	}
@@ -323,10 +381,11 @@ function plotLine(varName){
 	lineChart.append("path")
 		      .datum(varData)
 		      .attr("fill", "none")
-		      .attr("stroke", "#9b59b6")
+		      .attr("stroke", linePlotColorScale(varName))
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
+		      .attr('id', varName)
 		      .attr("d", line);
 
 	//Draw axes
@@ -339,6 +398,7 @@ function plotLine(varName){
 
 	
 }
+
 
 /**************************PERCENT CHANGE BAR CHART****************************/
 
@@ -439,7 +499,8 @@ function createBars(year){
 				.attr('x2', widthBC)
 				.attr('y2', heightScale(i))
 				.attr("class","barOverlay")
-				.attr("onmouseover","plotLine('"+d.Name+"')");
+				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
+				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
 		}
 	)
 }
@@ -550,9 +611,13 @@ function highlight(varName){
 	console.log('here');
 	//console.log(lineChart.selectAll('.corLine'));
 
-	lineChart.selectAll('.corLine').attr('stroke-opacity', .3);
-	lineChart.select('#'+varName).attr('stroke-opacity', 1);
-	lineChart.select('#Dow').attr('stroke-opacity', 1);
+	lineChart.selectAll('.corLine').attr('stroke-opacity', .2);
+	lineChart.select('#'+varName)
+			.attr('stroke-opacity', 1)
+			.attr('stroke-width', 3);
+	lineChart.select('#Dow')
+			.attr('stroke-opacity', 1)
+			.attr('stroke-width', 3);
 }
 
 function findYExtent(brands){
