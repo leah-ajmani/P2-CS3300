@@ -5,6 +5,7 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <!-- <script src="http://d3js.org/topojson.v2.min.js"></script> -->
 <script src="./node_modules/waypoint/lib/noframework.waypoints.js"></script>
+<script src="./node_modules/d3-svg-legend/d3-legend.min.js"></script>
 <!-- <link src="./node_modules/d3-slider/d3.slider.css" rel="stylesheet"> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
@@ -122,10 +123,11 @@
 // hide page
 $(".container").hide();
 
-// DIMENSIONS FOR LINE CHART
+// DIMENSIONS FOR LEGEND CHART
 var widthLeg = 600;
 var heightLeg = 70;
-var paddingLeg = 10;
+//Padding in between shapes in legend
+var paddingLeg = 50;
 
 // DIMENSIONS FOR LINE CHART
 var widthLC = 600;
@@ -227,6 +229,7 @@ function start(){
 
 //Graphs DOW average in the US
 function graphDow(){
+	legend.selectAll('*').remove();
 	dowData = valueData['Dow'];
 	//Initialize axes
 	lineX = d3.scaleTime()
@@ -277,6 +280,26 @@ function graphDow(){
 		.style("font-weight","bold")
 		.style("font-size",12);
 
+	//Legend
+	var lineChartScale = d3.scaleOrdinal()
+						.domain(['Dow', "Car Brand"])
+						.range(['#3498db', "#9b59b6"]);
+	legend.append('g')
+	  .attr("class", "legendSymbol")
+	  .attr('fill', 'black')
+	  .attr('width', widthLeg)
+	  .attr('height', heightLeg)
+	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+
+	var legendPath = d3.legendColor()
+	  .scale(lineChartScale)
+	  .shape('circle')
+	  .shapePadding(paddingLeg)
+	  .orient("horizontal");
+
+	legend.select(".legendSymbol")
+	  .call(legendPath);
+
 }
 
 
@@ -313,17 +336,19 @@ function plotLine(varName){
 		.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
+
+	
 }
 
 /**************************PERCENT CHANGE BAR CHART****************************/
 
 //Gets values for every car for the given year
 function valueDataByYear(year){
-	console.log(year);
+	//console.log(year);
 	toReturn = [];
-	console.log(valueData);
+	//console.log(valueData);
 	for(var series in valueData){
-		console.log(valueData[series]);
+		//console.log(valueData[series]);
 		valueData[series].forEach(
 			function(seriesPoint){
 				if(seriesPoint.Year.getFullYear() == year){
@@ -331,7 +356,7 @@ function valueDataByYear(year){
 						Name: series,
 						Value: seriesPoint.Value
 					};
-					console.log(toPush);
+					//console.log(toPush);
 					toReturn.push(toPush);
 				}
 			}
@@ -362,14 +387,14 @@ function fullDataExtent(){
 	var toReturn = [];
 	for(var series in valueData){
 		var values = valueData[series].map(function(point){return point.Value;})
-		console.log(series)
+		//console.log(series)
 		minimums.push(d3.min(values));
 		maximums.push(d3.max(values));
-		console.log(d3.max(values));
+		//console.log(d3.max(values));
 	}
 	toReturn.push(d3.min(minimums));
 	toReturn.push(d3.max(maximums));
-	console.log(toReturn);
+	//console.log(toReturn);
 	if(Math.abs(toReturn[0]) > Math.abs(toReturn[1])){
 		toReturn = [-(Math.abs(toReturn[0])), Math.abs(toReturn[0])];
 	}
@@ -385,11 +410,11 @@ function createBars(year){
 						.domain(fullDataExtent())
 						.range([-widthBC/2, widthBC/2]);
 	var barData = valueDataByYear(year);
-	console.log(barData);
+	//console.log(barData);
 	var heightScale = d3.scaleLinear()
 						.domain([0,barData.length-1])
 						.range([heightBC-paddingBC,paddingBC]);
-	console.log(lengthScale(0));
+	//console.log(lengthScale(0));
 	barData.forEach(
 		function(d, i){
 			// bar
@@ -422,6 +447,7 @@ function createBars(year){
 //Draws the midline for the bar chart
 //defaults to percent change chart for 1994
 function initBarChart(){
+	barChart.selectAll('*').remove();
 	lengthScale = d3.scaleLinear()
 						.domain([-widthBC/2, widthBC/2])
 						.range([0, widthBC]);
@@ -462,12 +488,12 @@ function plotCorLine(varName, color, yExtent){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
 	var varData = dataAtYearRange(valueData[varName], [2006, 2012]);
-	console.log(varData);
+	//console.log(varData);
 	corX = d3.scaleTime()
 					.domain([parseTime(2006), parseTime(2012)])
 					.rangeRound([paddingCC, widthCC-paddingCC]);
-	console.log('cor line');
-	console.log(corX(parseTime(2006)));
+	//console.log('cor line');
+	//console.log(corX(parseTime(2006)));
 	corY = d3.scaleLinear()
 					.domain(yExtent)
 					.rangeRound([heightCC-paddingCC, paddingCC]);
@@ -480,6 +506,8 @@ function plotCorLine(varName, color, yExtent){
 	//Draw variable line plot
 	lineChart.append("path")
 		      .datum(varData)
+		      .attr('id', varName)
+		      .attr("class", "corLine")
 		      .attr("fill", "none")
 		      .attr("stroke", color)
 		      .attr("stroke-linejoin", "round")
@@ -518,6 +546,15 @@ function plotCorLine(varName, color, yExtent){
 		//.style("font-size",12);
 }
 
+function highlight(varName){
+	console.log('here');
+	//console.log(lineChart.selectAll('.corLine'));
+
+	lineChart.selectAll('.corLine').attr('stroke-opacity', .3);
+	lineChart.select('#'+varName).attr('stroke-opacity', 1);
+	lineChart.select('#Dow').attr('stroke-opacity', 1);
+}
+
 function findYExtent(brands){
 	var minimums = [];
 	var maximums = [];
@@ -525,10 +562,10 @@ function findYExtent(brands){
 	for(var series in valueData){
 		if(brands.includes(series)){
 			var values = valueData[series].map(function(point){return point.Value;})
-			console.log(series)
+			//console.log(series)
 			minimums.push(d3.min(values));
 			maximums.push(d3.max(values));
-			console.log(d3.max(values));
+			//console.log(d3.max(values));
 		}
 	}
 	toReturn.push(d3.min(minimums));
@@ -545,6 +582,7 @@ function findYExtent(brands){
 
 function plotInvCorrelation(){
 	lineChart.selectAll('*').remove();
+	legend.selectAll('*').remove();
 	var invBrands = ["Dow", "Rolls Royce", "Maserati", "Bugatti"];
 	var invColors = ['steelblue', 'red', 'green', 'purple'];
 	var yExtent = findYExtent(invBrands);
@@ -552,15 +590,33 @@ function plotInvCorrelation(){
 							.domain(invBrands)
 							.range(invColors);
 	invBrands.forEach(function(b){
-		console.log(b);
-		console.log(invColorScale(b))
+		//console.log(b);
+		//console.log(invColorScale(b))
 		plotCorLine(b, invColorScale(b), yExtent);
-	})
+	});
+	generateSelectionChart(invBrands);
+	//Legend
+	legend.append('g')
+	  .attr("class", "legendSymbol")
+	  .attr('fill', 'black')
+	  .attr('width', widthLeg)
+	  .attr('height', heightLeg)
+	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+
+	var legendPath = d3.legendColor()
+	  .scale(invColorScale)
+	  .shape('circle')
+	  .shapePadding(paddingLeg)
+	  .orient("horizontal");
+
+	legend.select(".legendSymbol")
+	  .call(legendPath);
 }
 
 function plotPosCorrelation(){
 	console.log('pos correlation');
 	lineChart.selectAll('*').remove();
+	legend.selectAll('*').remove();
 	var posBrands = ["Dow", "Chevrolet", "Porsche", "Jeep"];
 	var posColors = ['steelblue', 'orange', 'brown', 'yellow'];
 	var yExtent = findYExtent(posBrands);
@@ -571,11 +627,48 @@ function plotPosCorrelation(){
 		//console.log(b);
 		//console.log(posColorScale(b))
 		plotCorLine(b, posColorScale(b), yExtent);
-	})
+	});
+	generateSelectionChart(posBrands);
+	//Legend
+	legend.append('g')
+	  .attr("class", "legendSymbol")
+	  .attr('fill', 'black')
+	  .attr('width', widthLeg)
+	  .attr('height', heightLeg)
+	  .attr('transform','translate('+((widthLeg/2)-(paddingLeg/2))+','+(heightLeg/2)+')');
+
+	var legendPath = d3.legendColor()
+	  .scale(posColorScale)
+	  .shape('circle')
+	  .shapePadding(paddingLeg)
+	  .orient("horizontal");
+
+	legend.select(".legendSymbol")
+	  .call(legendPath);
 
 }
 
-/********************SCROLLING TRIGGERS**************************/
+/*********************CORRELATION CAR SELECTOR**********************************/
+function generateSelectionChart(brands){
+	barChart.selectAll('*').remove();
+
+	var heightScale = d3.scaleLinear()
+						.domain([0,brands.length-1])
+						.range([heightBC-paddingBC,paddingBC]);
+	brands.forEach(function(d, i){
+		barChart.append("text")
+					.attr("x", paddingBC/1.5)
+					.attr("y", heightScale(i)+4)
+					.style("font-size",8)
+					.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
+					.text(d)
+					.attr("onmouseover","highlight('"+d+"')");
+	});
+
+	barChart.append("text")
+		.attr("transform", "rotate(270) translate(-230, " + paddingBC/2.5 + ")")
+		.text("Car Make");
+}
 
 
 /****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
