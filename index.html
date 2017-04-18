@@ -325,11 +325,14 @@ function plotCurr(){
 	})
 }
 
+
 function plotAll(currVar, is_clicked){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
+	var newDomain = toPlot.slice();
+	newDomain.push(currVar);
 	linePlotColorScale = d3.scaleOrdinal()
-							.domain(toPlot)
+							.domain(newDomain)
 							.range(d3.schemeCategory20);
 	console.log(toPlot);
 	if(is_clicked){
@@ -350,6 +353,9 @@ function plotAll(currVar, is_clicked){
 	else{
 		plotLine(currVar);
 	}
+	// linePlotColorScale = d3.scaleOrdinal()
+	// 						.domain(toPlot)
+	// 						.range(d3.schemeCategory20);
 	toPlot.forEach(function(p){
 		if(p == "Dow"){
 			graphDow();
@@ -369,7 +375,9 @@ function plotLine(varName){
 	//lineChart.selectAll('*').remove();
 	//graphDow();
 	//plotCurr();
-	
+	// linePlotColorScale = d3.scaleOrdinal()
+	// 						.domain(toPlot)
+	// 						.range(d3.schemeCategory20);
 
 	if(varName == 'Dow'){
 		return;
@@ -611,7 +619,7 @@ function plotCorLine(varName, color, yExtent){
 }
 
 function highlight(varName){
-	console.log('here');
+	console.log(varName);
 	//console.log(lineChart.selectAll('.corLine'));
 
 	lineChart.selectAll('.corLine').attr('stroke-opacity', .2);
@@ -666,7 +674,7 @@ function plotInvCorrelation(){
 	invBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), yExtent);
+		plotCorLine(b, invColorScale(b), [-50,200]);
 	});
 	generateSelectionChart(invBrands);
 	//Legend
@@ -691,7 +699,7 @@ function plotPosCorrelation(){
 	console.log('pos correlation');
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Chevrolet", "Porsche", "Jeep"];
+	var posBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
 	var posColors = ['steelblue', 'orange', 'brown', 'yellow'];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
@@ -700,7 +708,7 @@ function plotPosCorrelation(){
 	posBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(posColorScale(b))
-		plotCorLine(b, posColorScale(b), yExtent);
+		plotCorLine(b, posColorScale(b), [-60,60]);
 	});
 	generateSelectionChart(posBrands);
 	//Legend
@@ -833,17 +841,17 @@ $(document).ready(function() {
 	});
 
    	var posCorPanel = new Waypoint({
-	  element: document.getElementById('panel1'),
+	  element: document.getElementById('panel2'),
 	  handler: plotPosCorrelation,
 	  	//function(){console.log('found panel');},
-	  offset: '40%'
+	  offset: '50%'
 	});
 
 	var invCorPanel = new Waypoint({
-	  element: document.getElementById('panel2'),
+	  element: document.getElementById('panel1'),
 	  handler: plotInvCorrelation,
 	  	//function(){console.log('found panel');},
-	  offset: '40%'
+	  offset: '50%'
 	});
    	// setTimeout(function(){
    	// 	$("span").not(".word1,.word2").show(1500);
