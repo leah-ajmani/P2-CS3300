@@ -3,10 +3,9 @@
 <head>
 <title>Project 2</title>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<!-- <script src="http://d3js.org/topojson.v2.min.js"></script> -->
-<script src="./node_modules/waypoint/lib/noframework.waypoints.js"></script>
+<script src="http://d3js.org/topojson.v2.min.js"></script>
+<script src="./node_modules/d3-slider/d3.slider.js"></script>
 <!-- <link src="./node_modules/d3-slider/d3.slider.css" rel="stylesheet"> -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <style>
@@ -21,6 +20,8 @@
 	svg{
 		background-color: white;
 		border: 1px solid #95a5a6;
+		margin-top: 10px;
+		margin-bottom: 10px;
 	}
 	hr{
 		border: 0;
@@ -28,27 +29,11 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     /*border-bottom: 1px solid rgba(255, 255, 255, 0.3);*/
 	}
-	.graphs{
-		position: fixed;
-		width: 1000px;
-		left: 460px;
-		top: 46px;
-	}
 	.container{
-		margin: 90px 10px 160px;
-		max-width: 380px;
+		margin: 40px auto;
+		max-width: 1000px;
 		padding: 10px 40px 20px;
 		border: 1px solid #ecf0f1;
-		float: left;
-	}
-	.h_spacer{
-		width: 700px;
-		height: 700px;
-		float: left;
-		background-color: black;
-	}
-	.v_spacer{
-		height: 200px;
 	}
 	.word1{
 		color: #3498db;
@@ -74,58 +59,24 @@
 	  stroke-width: 1.25px;
 	  pointer-events: none;
 	}
-	.header_positive{
-		color: #d35400;
-	}
-	.header_negative{
-		color: #2980b9;
-	}
-	.header_other{
-		color: #7f8c8d;
-	}
+
 </style>
 </head>
 <body>
-	<div class="container">
-		<h1 id="start-panel">Do Artists Rap About Cheaper <span class="word2">Cars</span><br> When The <span class="word1">Dow </span><br>is down?</h1>
+<div class="container">
+	<h1><span>Do Artists Only </span><span class="word1">Rap </span><br><span>About Reasonably Priced </span><span class="word2">Cars</span><span>?</span></h1>
 
-		<div class="v_spacer"></div>
-
-		<h2 id="panel1" class="header_positive">Correlation</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-		<div class="v_spacer"></div>
-
-		<h2 id="panel2" class="header_negative">Inverse Correlation</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-		<div class="v_spacer"></div>
-
-		<h2 id="panel3" class="header_other">Other Interesting Points</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-	</div>
-
-	<!-- <div class="h_spacer">
-	</div> -->
-
-	<div class="graphs">
-		<svg id="legend"/>
-		<svg id="line-chart"/>
-		<!-- <svg id="correlation-chart"/> -->
-		<svg id="bar-chart"/>
-		<!-- <svg id="slider"/> -->
-		<!-- <svg id="freq-chart" width='700' height='700'/> -->
-		<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
-	</div>
-	
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	<svg id="line-chart"/>
+	<svg id="bar-chart"/>
+	<svg id="correlation-chart"/>
+	<!-- <svg id="slider"/> -->
+	<!-- <svg id="freq-chart" width='700' height='700'/><br> -->
+	<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
+</div>
 <script>
 // hide page
 $(".container").hide();
-
-// DIMENSIONS FOR LINE CHART
-var widthLeg = 600;
-var heightLeg = 70;
-var paddingLeg = 10;
 
 // DIMENSIONS FOR LINE CHART
 var widthLC = 600;
@@ -138,26 +89,22 @@ var heightBC = 400;
 var paddingBC = 60;
 
 //DIMENSIONS FOR CORRELATION CHART
-var widthCC = 600;
-var heightCC = 400;
+var widthCC = 500;
+var heightCC = 300;
 var paddingCC = 70;
 
 // SELECT AND EDIT SVG ELEMENTS
-var legend = d3.select('#legend');
-legend.attr("width",widthLeg)
-	.attr("height",heightLeg);
-
 var lineChart = d3.select('#line-chart');
 lineChart.attr("width",widthLC)
 	.attr("height",heightLC);
 
 var barChart = d3.select('#bar-chart');
-barChart.attr("width",widthBC - 170)
+barChart.attr("width",widthBC)
 	.attr("height",heightBC);
 // var freqChart = d3.select('#freq-chart');
-// var lineChart = d3.select('#correlation-chart')
-// lineChart.attr("width", widthCC)
-// 		.attr("height", heightCC);
+var lineChart = d3.select('#correlation-chart')
+lineChart.attr("width", widthCC)
+		.attr("height", heightCC);
 /********************DATA PARSING*************************************/
 var parseTime = d3.timeParse('%Y');
 function parseCarRow(r){
@@ -211,56 +158,72 @@ function initData(error,carData, dowData){
 			}
 		}
 	});
-	//console.log(valueData);
-	//console.log(freqData);
+	console.log(valueData);
+	console.log(freqData);
+	graphDow();
+	initBarChart();
 	//initFreqChart();
 }
 
-/******************LINE CHART******************************/
-var lineX, lineY;
-
-function start(){
-	lineChart.selectAll('*').remove();
-	graphDow();
-	initBarChart();
-}
-
-//Graphs DOW average in the US
-function graphDow(){
-	dowData = valueData['Dow'];
-	//Initialize axes
-	lineX = d3.scaleTime()
+//inspired by http://bl.ocks.org/rassie/7391061
+function drawSlider(){
+	var x = d3.scaleTime()
 					.domain(d3.extent(dowData, function(d){return d.Year;}))
 					.rangeRound([paddingLC,widthLC-paddingLC]);
-	lineY = d3.scaleLinear()
-					//.domain(d3.extent(dowData, function(d){return d.Value;}))
-					//.domain(fullDataExtent())
-					.domain([-50,300])
+	var brush = sliderSVG.brush()
+    .x(x)
+    .extent([0, 0])
+    .on("brush", brushed)
+    .on("brushend", brushend);
+
+    sliderSVG.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + sliderHeight / 2 + ")")
+    .call(d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+      .tickFormat(function(d) { return d; })
+      .tickSize(0)
+      .tickPadding(12))
+  .select(".domain")
+  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+    .attr("class", "halo");
+}
+
+/*//Graphs Album Sales in the US
+function graphSales(){
+	salesData = valueData['Album Sales'];
+	//Initialize axes
+	var xAxis = d3.scaleTime()
+					.domain(d3.extent(salesData, function(d){return d.Year;}))
+					.rangeRound([paddingLC,widthLC-paddingLC]);
+	var yAxis = d3.scaleLinear()
+					.domain(d3.extent(salesData, function(d){return d.Value;}))
 					.rangeRound([heightLC-paddingLC,paddingLC]);
-	//Path generator for line plot of dow over time				
+	//Path generator for line plot of album sales over time				
 	var line = d3.line()
-		.curve(d3.curveBasis)
-	    .x(function(d) { return lineX(d.Year); })
-	    .y(function(d) { return lineY(d.Value); });
+	    .x(function(d) { return xAxis(d.Year); })
+	    .y(function(d) { return yAxis(d.Value); });
 
 	//Draws line plot
 	lineChart.append("path")
-		      .datum(dowData)
+		      .datum(salesData)
 		      .attr("fill", "none")
 		      .attr("stroke", "#3498db")
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
 		      .attr("d", line);
+	//draws slider
 	
 	//Draws axes	      
 	lineChart.append("g")
     .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
-    .call(d3.axisBottom(lineX))
+    .call(d3.axisBottom(xAxis))
 
 	lineChart.append("g")
 		.attr("transform", "translate("+(paddingLC)+",0)")
-    .call(d3.axisLeft(lineY))
+    .call(d3.axisLeft(yAxis))
 
   // Label axes
   lineChart.append("text")
@@ -273,7 +236,62 @@ function graphDow(){
 	lineChart.append("text")
 		.attr("x", paddingLC*1.4)
 		.attr("y", paddingLC/2)
-		//.text("Percent Change in Album Sales Over Time")
+		.text("Percent Change in Album Sales Over Time")
+		.style("font-weight","bold")
+		.style("font-size",12);
+
+}*/
+
+
+//Graphs Album Sales in the US
+function graphDow(){
+	dowData = valueData['Dow'];
+	//Initialize axes
+	var xAxis = d3.scaleTime()
+					.domain(d3.extent(dowData, function(d){return d.Year;}))
+					.rangeRound([paddingLC,widthLC-paddingLC]);
+	var yAxis = d3.scaleLinear()
+					//.domain(d3.extent(dowData, function(d){return d.Value;}))
+					.domain(fullDataExtent())
+					.rangeRound([heightLC-paddingLC,paddingLC]);
+	//Path generator for line plot of dow over time				
+	var line = d3.line()
+		.curve(d3.curveBasis)
+	    .x(function(d) { return xAxis(d.Year); })
+	    .y(function(d) { return yAxis(d.Value); });
+
+	//Draws line plot
+	lineChart.append("path")
+		      .datum(dowData)
+		      .attr("fill", "none")
+		      .attr("stroke", "#3498db")
+		      .attr("stroke-linejoin", "round")
+		      .attr("stroke-linecap", "round")
+		      .attr("stroke-width", 1.5)
+		      .attr("d", line);
+	//draws slider
+	
+	//Draws axes	      
+	lineChart.append("g")
+    .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
+    .call(d3.axisBottom(xAxis))
+
+	lineChart.append("g")
+		.attr("transform", "translate("+(paddingLC)+",0)")
+    .call(d3.axisLeft(yAxis))
+
+  // Label axes
+  lineChart.append("text")
+		.attr("x", (widthLC-20) * 0.5)
+		.attr("y", heightLC - paddingLC/4)
+		.text("Year");
+	lineChart.append("text")
+		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
+		.text("Percent Change");
+	lineChart.append("text")
+		.attr("x", paddingLC*1.4)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in Album Sales Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
 
@@ -281,21 +299,66 @@ function graphDow(){
 
 
 
-//Graphs [varName] and Dow Industrial Average over time to the main
-//line chart
+//Graphs [varName] and Dow Industrial Average over time
 function plotLine(varName){
 	//Clears the line chart svg
 	lineChart.selectAll('*').remove();
-	graphDow();
 	if(varName == 'Dow'){
+		graphDow();
 		return;
 	}
+	console.log('plotting line');
+	//var salesData = valueData['Album Sales'];
+	var dowData = valueData['Dow'];
 	var varData = valueData[varName];
+	//Time range specified by variable valueData
+	var xAxis = d3.scaleTime()
+					.domain(d3.extent(varData, function(d){return d.Year;}))
+					.rangeRound([paddingLC,widthLC-paddingLC]);
+	//Initializes yAxis with the greatest range between gdp and
+	//the variable to be plotted
+	var yAxis = d3.scaleLinear()
+			.rangeRound([heightLC-paddingLC,paddingLC]);
+	var dowMin = d3.min(dowData, function(d){return d.Value;});
+	var dowMax = d3.max(dowData, function(d){return d.Value;});
+	var varMin = d3.min(varData, function(d){return d.Value;});
+	var varMax = d3.max(varData, function(d){return d.Value;});
+
+	// var domain = [];
+	// if(dowMin < varMin){//|| salesMax > varMax){
+	// 	//yAxis.domain([salesMin, salesMax]);
+	// 	domain.push(dowMin);
+	// }
+	// else{
+	// 	//yAxis.domain([varMin, varMax]);
+	// 	domain.push(varMin);
+	// }
+
+	// if(dowMax > varMax){
+	// 	domain.push(salesMax);
+	// }
+	// else{
+	// 	domain.push(varMax);
+	// }
+
+	// yAxis.domain(domain);
+	yAxis.domain(fullDataExtent());
+	//Path generator for line plot
 	var line = d3.line()
 		.curve(d3.curveBasis)
-	    .x(function(d) { return lineX(d.Year); })
-	    .y(function(d) { return lineY(d.Value); });
-	
+	    .x(function(d) { return xAxis(d.Year); })
+	    .y(function(d) { return yAxis(d.Value); });
+
+	//Draw album sales line plot
+	lineChart.append("path")
+		      .datum(dowData)
+		      .attr("fill", "none")
+		      .attr("stroke", "#3498db")
+		      .attr("stroke-linejoin", "round")
+		      .attr("stroke-linecap", "round")
+		      .attr("stroke-width", 1.5)
+		      .attr("d", line);
+
 	//Draw variable line plot
 	lineChart.append("path")
 		      .datum(varData)
@@ -306,11 +369,27 @@ function plotLine(varName){
 		      .attr("stroke-width", 1.5)
 		      .attr("d", line);
 
-	//Draw axes
+	//Draw axes	      
+	 lineChart.append("g")
+    .attr("transform", "translate(0,"+(heightLC-paddingLC)+")")
+    .call(d3.axisBottom(xAxis));
+
+	lineChart.append("g")
+		.attr("transform", "translate("+(paddingLC)+",0)")
+	  .call(d3.axisLeft(yAxis));
+
+	// Label axes
+  lineChart.append("text")
+		.attr("x", (widthLC-20) * 0.5)
+		.attr("y", heightLC - paddingLC/4)
+		.text("Year");
+	lineChart.append("text")
+		.attr("transform", "rotate(270) translate(-250, " + paddingLC/2.5 + ")")
+		.text("Percent Change");
 	lineChart.append("text")
 		.attr("x", paddingLC*1.4)
 		.attr("y", paddingLC/2)
-		.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
+		.text("Percent Change in Album Sales and "+varName+" Rap Mentions Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
 }
@@ -435,153 +514,19 @@ function initBarChart(){
 			.style('stroke-width', 1);
 
 	// Label axes
-  // barChart.append("text")
-		// .attr("x", (widthBC-100) * 0.5)
-		// .attr("y", heightBC - paddingBC/4)
-		// .text("Percent Change");
+  barChart.append("text")
+		.attr("x", (widthBC-100) * 0.5)
+		.attr("y", heightBC - paddingBC/4)
+		.text("Percent Change");
 	barChart.append("text")
 		.attr("transform", "rotate(270) translate(-230, " + paddingBC/2.5 + ")")
 		.text("Car Make");
 }
 
-/***************************CORRELATION CHART*************************************/
-function dataAtYearRange(data, timeRange){
-	var toReturn = [];
-	data.forEach(function(d){
-		//console.log(d);
-		if(d.Year.getFullYear() >= timeRange[0] && 
-			d.Year.getFullYear() <= timeRange[1]){
-			//console.log(d.Year);
-			toReturn.push(d);
-		}
-	});
-	return toReturn;
-}
-
-function plotCorLine(varName, color, yExtent){
-	//Clears the line chart svg
-	//lineChart.selectAll('*').remove();
-	var varData = dataAtYearRange(valueData[varName], [2006, 2012]);
-	console.log(varData);
-	corX = d3.scaleTime()
-					.domain([parseTime(2006), parseTime(2012)])
-					.rangeRound([paddingCC, widthCC-paddingCC]);
-	console.log('cor line');
-	console.log(corX(parseTime(2006)));
-	corY = d3.scaleLinear()
-					.domain(yExtent)
-					.rangeRound([heightCC-paddingCC, paddingCC]);
-
-	var line = d3.line()
-		.curve(d3.curveBasis)
-	    .x(function(d) { return corX(d.Year); })
-	    .y(function(d) { return corY(d.Value); });
-	
-	//Draw variable line plot
-	lineChart.append("path")
-		      .datum(varData)
-		      .attr("fill", "none")
-		      .attr("stroke", color)
-		      .attr("stroke-linejoin", "round")
-		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 1.5)
-		      .attr("d", line);
-
-	//Draw axes
-	lineChart.append("g")
-    .attr("transform", "translate(0,"+(heightCC-paddingCC)+")")
-    .call(d3.axisBottom(corX))
-
-	lineChart.append("g")
-		.attr("transform", "translate("+(paddingCC)+",0)")
-    .call(d3.axisLeft(corY))
-	// Label axes
-  	lineChart.append("text")
-		.attr("x", (widthCC-20) * 0.5)
-		.attr("y", heightCC - paddingCC/4)
-		.text("Year");
-	lineChart.append("text")
-		.attr("transform", "rotate(270) translate(-250, " + paddingCC/2.5 + ")")
-		.text("Percent Change");
-	lineChart.append("text")
-		.attr("x", paddingCC*1.4)
-		.attr("y", paddingCC/2)
-		//.text("Percent Change in Album Sales Over Time")
-		.style("font-weight","bold")
-		.style("font-size",12);
-
-	lineChart.append("text")
-		.attr("x", paddingCC*1.4)
-		.attr("y", paddingCC/2)
-		//.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
-		//.style("font-weight","bold")
-		//.style("font-size",12);
-}
-
-function findYExtent(brands){
-	var minimums = [];
-	var maximums = [];
-	var toReturn = [];
-	for(var series in valueData){
-		if(brands.includes(series)){
-			var values = valueData[series].map(function(point){return point.Value;})
-			console.log(series)
-			minimums.push(d3.min(values));
-			maximums.push(d3.max(values));
-			console.log(d3.max(values));
-		}
-	}
-	toReturn.push(d3.min(minimums));
-	toReturn.push(d3.max(maximums));
-	//console.log(toReturn);
-	if(Math.abs(toReturn[0]) > Math.abs(toReturn[1])){
-		toReturn = [-(Math.abs(toReturn[0])), Math.abs(toReturn[0])];
-	}
-	else{
-		toReturn = [-(Math.abs(toReturn[1])), Math.abs(toReturn[1])];
-	}
-	return toReturn;
-}
-
-function plotInvCorrelation(){
-	lineChart.selectAll('*').remove();
-	var invBrands = ["Dow", "Rolls Royce", "Maserati", "Bugatti"];
-	var invColors = ['steelblue', 'red', 'green', 'purple'];
-	var yExtent = findYExtent(invBrands);
-	var invColorScale = d3.scaleOrdinal()
-							.domain(invBrands)
-							.range(invColors);
-	invBrands.forEach(function(b){
-		console.log(b);
-		console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), yExtent);
-	})
-}
-
-function plotPosCorrelation(){
-	console.log('pos correlation');
-	lineChart.selectAll('*').remove();
-	var posBrands = ["Dow", "Chevrolet", "Porsche", "Jeep"];
-	var posColors = ['steelblue', 'orange', 'brown', 'yellow'];
-	var yExtent = findYExtent(posBrands);
-	var posColorScale = d3.scaleOrdinal()
-							.domain(posBrands)
-							.range(posColors);
-	posBrands.forEach(function(b){
-		//console.log(b);
-		//console.log(posColorScale(b))
-		plotCorLine(b, posColorScale(b), yExtent);
-	})
-
-}
-
-/********************SCROLLING TRIGGERS**************************/
-
-
 /****************FREQUENCY CHART (JUST ME PLAYING AROUND)*************************/
 //Gets frequency of usage for every car brand for given year
 function getFreqDataByYear(year){
-	//console.log(year);
+	console.log(year);
 	toReturn = [];
 	for(var series in freqData){
 		console.log(freqData[series]);
@@ -592,7 +537,7 @@ function getFreqDataByYear(year){
 						Name: series,
 						Value: seriesPoint.Value
 					};
-					//console.log(toPush);
+					console.log(toPush);
 					toReturn.push(toPush);
 				}
 			}
@@ -655,34 +600,10 @@ q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
 $(document).ready(function() {
     // $("span").not(".word1,.word2").hide();
    	$(".container").fadeIn(1000);
-   	graphDow();
-	initBarChart();
-	var startPanel = new Waypoint({
-	  element: document.getElementById('start-panel'),
-	  handler: start,
-	  	//function(){console.log('found panel');},
-	  //offset: '50%'
-	});
-
-   	var posCorPanel = new Waypoint({
-	  element: document.getElementById('panel1'),
-	  handler: plotPosCorrelation,
-	  	//function(){console.log('found panel');},
-	  offset: '40%'
-	});
-
-	var invCorPanel = new Waypoint({
-	  element: document.getElementById('panel2'),
-	  handler: plotInvCorrelation,
-	  	//function(){console.log('found panel');},
-	  offset: '40%'
-	});
    	// setTimeout(function(){
    	// 	$("span").not(".word1,.word2").show(1500);
    	// }, 1000);
 });
-
-
 </script>
 </body>
 </html>
