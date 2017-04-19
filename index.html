@@ -34,7 +34,7 @@
 		position: fixed;
 		width: 1000px;
 		left: 460px;
-		top: 100px;
+		top: 90px;
 	}
 	.container{
 		margin: 0 10px 0;
@@ -87,6 +87,11 @@
 	}
 	#rap_quote{
 		font-style: italic;
+		margin: 10px;
+	}
+	#bar-chart{
+		margin-left: -30px;
+		border-left: 1px solid #ecf0f1;
 	}
 	path.corLine {
 		stroke-dasharray: 1000;
@@ -104,7 +109,7 @@
 </head>
 <body>
 	<div class="container">
-		<h1 id="start-panel">Do Artists Rap About Cheaper <span class="word2">Cars</span><br> When The <span class="word1">Dow </span><br>is down?</h1>
+		<h1 id="start-panel">Do Artists Rap About Cheaper <span class="word2">Cars</span><br> When The <span class="word1">Economy </span><br>is down?</h1>
 
 		<div class="v_spacer"></div>
 		<div id="panel1">
@@ -130,7 +135,7 @@
 	<div class="graphs">
 		<!-- <svg id="legend"/> -->
 		<!-- <p id="rap_quote">"Lamborghini, mercy, your chick she's so thirsty / I'm in that two-seat Lambo with your girl, she's tryna jerk me"</p> -->
-		<p id="rap_quote">"Hover over car names to see their relationships with each other, and the economy" - Leah, Saqif, Derrick</p>
+		<p id="rap_quote">"Hover over car names to see their relationships with each other and the economy" - Leah, Saqif, Derrick</p>
 		<br/>
 		<svg id="line-chart"/>
 		<!-- <svg id="correlation-chart"/> -->
@@ -156,9 +161,9 @@ var heightLC = 400;
 var paddingLC = 70;
 
 // DIMENSINOS FOR BAR CHART
-var widthBC = 300;
+var widthBC = 280;
 var heightBC = 400;
-var paddingBC = 60;
+var paddingBC =70;
 
 //DIMENSIONS FOR CORRELATION CHART
 var widthCC = 600;
@@ -287,7 +292,7 @@ function graphDow(){
 		      .attr("stroke", "#3498db")
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 1.5)
+		      .attr("stroke-width", 2.1)
 		      .attr("d", line);
 	
 	//Draws axes	      
@@ -314,11 +319,10 @@ function graphDow(){
 		.style("font-weight","bold")
 		.style("font-size",12);
 	lineChart.append("text")
-		.attr("x", paddingLC*2)
+		.attr("x", paddingLC*1.7)
 		.attr("y", paddingLC/2)
 		.text("Percent Change in DOW")
-		.style("font-weight","bold")
-		.style("font-size",12);
+		.style("font-weight","bold");
 	//Legend
 	// var lineChartScale = d3.scaleOrdinal()
 	// 					.domain(['Dow', "Car Brand"])
@@ -451,11 +455,10 @@ function plotLine(varName){
 
 	//Draw axes
 	lineChart.append("text")
-		.attr("x", paddingLC*2)
+		.attr("x", paddingLC*1.7)
 		.attr("y", paddingLC/2)
 		.text("Percent Change in DOW and Rap Mentions Over Time")
-		.style("font-weight","bold")
-		.style("font-size",12);
+		.style("font-weight","bold");
 
 	
 }
@@ -574,7 +577,7 @@ function createBars(year){
 			// 	.style('stroke-width', 15);
 			// bar text
 			barChart.append("text")
-				.attr("x", paddingBC/1.5)
+				.attr("x", paddingBC/2.2)
 				.attr("y", heightScale(i)+4)
 				.style("font-size",8)
 				.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
@@ -593,8 +596,8 @@ function createBars(year){
 				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
 
 			barChart.append('circle')
-				.attr('cx', paddingBC/1.8)
-				.attr('cy', heightScale(i)+2)
+				.attr('cx', paddingBC/3)
+				.attr('cy', heightScale(i)+1)
 				.attr('r', 5)
 				.style('fill', linePlotColorScale(d.Name));
 		}
@@ -623,7 +626,8 @@ function initBarChart(){
 		// .attr("y", heightBC - paddingBC/4)
 		// .text("Percent Change");
 	barChart.append("text")
-		.attr("transform", "rotate(270) translate(-230, " + paddingBC/2.5 + ")")
+		.attr("x", paddingBC*.27)
+		.attr("y", paddingBC/2)
 		.text("Car Make");
 }
 
