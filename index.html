@@ -251,6 +251,12 @@ var selected = [];
 var linePlotColorScale = d3.scaleOrdinal()
 							.domain(getVarNames())
 							.range(d3.schemeCategory20);
+var linePlotColorScaleWarm = d3.scaleOrdinal()
+							.domain(getVarNames())
+							.range("#3498db","#f1c40f","#e67e22","#e74c3c");
+var linePlotColorScaleCool = d3.scaleOrdinal()
+							.domain(getVarNames())
+							.range("#3498db","#9b59b6","#1abc9c","#2ecc71");
 
 function start(){
 	lineChart.selectAll('*').remove();
