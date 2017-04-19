@@ -194,6 +194,12 @@ function parseSalesRow(d){
 	}
 }
 
+function parseMentions(d){
+	return {
+
+	}
+}
+
 //Keeps all of the percent change data indexed by car brand name
 //(e.g., valueData['Mercedes Benz'] returns the percent change data for
 //Mercedes Benz)
@@ -632,6 +638,11 @@ function dataAtYearRange(data, timeRange){
 function plotCorLine(varName, color, yExtent){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
+	if(varName == "Dow"){
+		graphDow();
+		return;
+	}
+
 	console.log(varName);
 	var varData = dataAtYearRange(valueData[varName], [1994, 2014]);
 	//console.log(varData);
@@ -662,31 +673,31 @@ function plotCorLine(varName, color, yExtent){
 		      .attr("d", line);
 
 	//Draw axes
-	lineChart.append("g")
-    .attr("transform", "translate(0,"+(heightCC-paddingCC)+")")
-    .call(d3.axisBottom(corX))
+	// lineChart.append("g")
+ //    .attr("transform", "translate(0,"+(heightCC-paddingCC)+")")
+ //    .call(d3.axisBottom(corX))
 
-	lineChart.append("g")
-		.attr("transform", "translate("+(paddingCC)+",0)")
-    .call(d3.axisLeft(corY))
-	// Label axes
-  	lineChart.append("text")
-		.attr("x", (widthCC-20) * 0.5)
-		.attr("y", heightCC - paddingCC/4)
-		.text("Year");
-	lineChart.append("text")
-		.attr("transform", "rotate(270) translate(-250, " + paddingCC/2.5 + ")")
-		.text("Percent Change");
-	lineChart.append("text")
-		.attr("x", paddingCC*1.4)
-		.attr("y", paddingCC/2)
-		//.text("Percent Change in Album Sales Over Time")
-		.style("font-weight","bold")
-		.style("font-size",12);
+	// lineChart.append("g")
+	// 	.attr("transform", "translate("+(paddingCC)+",0)")
+ //    .call(d3.axisLeft(corY))
+	// // Label axes
+ //  	lineChart.append("text")
+	// 	.attr("x", (widthCC-20) * 0.5)
+	// 	.attr("y", heightCC - paddingCC/4)
+	// 	.text("Year");
+	// lineChart.append("text")
+	// 	.attr("transform", "rotate(270) translate(-250, " + paddingCC/2.5 + ")")
+	// 	.text("Percent Change");
+	// lineChart.append("text")
+	// 	.attr("x", paddingCC*1.4)
+	// 	.attr("y", paddingCC/2)
+	// 	//.text("Percent Change in Album Sales Over Time")
+	// 	.style("font-weight","bold")
+	// 	.style("font-size",12);
 
-	lineChart.append("text")
-		.attr("x", paddingCC*1.4)
-		.attr("y", paddingCC/2)
+	// lineChart.append("text")
+	// 	.attr("x", paddingCC*1.4)
+	// 	.attr("y", paddingCC/2)
 		//.text("Percent Change in DOW and "+varName+" Rap Mentions Over Time")
 		//.style("font-weight","bold")
 		//.style("font-size",12);
@@ -748,7 +759,7 @@ function plotInvCorrelation(){
 	invBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), [-50,300]);
+		plotCorLine(b, linePlotColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(invBrands);
 	//Legend
@@ -782,7 +793,7 @@ function plotPosCorrelation(){
 	posBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(posColorScale(b))
-		plotCorLine(b, posColorScale(b), [-50,300]);
+		plotCorLine(b, linePlotColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(posBrands);
 	//Legend
@@ -900,6 +911,7 @@ var q = d3.queue();
 
 q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
 	.defer(d3.csv, 'dow.csv', parseSalesRow)
+	//.defer(d3.csv, 'carMentions.csv', parseMentionRow)
 	.await(initData);
 
 $(document).ready(function() {
