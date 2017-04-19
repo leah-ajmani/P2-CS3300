@@ -778,7 +778,7 @@ function plotInvCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var invBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
-	var invColors = ['steelblue', 'red', 'green', 'purple'];
+	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
 							.domain(invBrands)
@@ -812,7 +812,7 @@ function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var posBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
-	var posColors = ['steelblue', 'orange', 'brown', 'yellow'];
+	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
 							.domain(posBrands)
@@ -851,7 +851,7 @@ function generateSelectionChart(brands){
 						.range([heightBC-paddingBC,paddingBC]);
 	brands.forEach(function(d, i){
 		barChart.append("text")
-					.attr("x", paddingBC/1.5)
+					.attr("x", paddingBC/2.2)
 					.attr("y", heightScale(i)+4)
 					.style("font-size",8)
 					.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
@@ -860,8 +860,11 @@ function generateSelectionChart(brands){
 					.attr("onmouseout", "dehighlight()")
 	});
 
+	
+
 	barChart.append("text")
-		.attr("transform", "rotate(270) translate(-230, " + paddingBC/2.5 + ")")
+		.attr("x", paddingBC*.27)
+		.attr("y", paddingBC/2)
 		.text("Car Make");
 }
 
