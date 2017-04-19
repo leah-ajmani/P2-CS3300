@@ -91,19 +91,21 @@
 		<h1 id="start-panel">Do Artists Rap About Cheaper <span class="word2">Cars</span><br> When The <span class="word1">Dow </span><br>is down?</h1>
 
 		<div class="v_spacer"></div>
+		<div id="panel1">
+			<h2 class="header_positive">Correlation</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+		<div class="v_spacer"></div>
 
-		<h2 id="panel1" class="header_positive">Correlation</h2>
+		<div id="panel2">
+		<h2 class="header_negative">Inverse Correlation</h2>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</div>
 
 		<div class="v_spacer"></div>
 
-		<h2 id="panel2" class="header_negative">Inverse Correlation</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-		<div class="v_spacer"></div>
-
-		<h2 id="panel3" class="header_other">Other Interesting Points</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<!-- <h2 id="panel3" class="header_other">Other Interesting Points</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
 	</div>
 
 	<!-- <div class="h_spacer">
@@ -223,13 +225,21 @@ var lineX, lineY;
 var toPlot = ["Dow"];
 var selected = [];
 var linePlotColorScale = d3.scaleOrdinal()
-							.domain(toPlot)
+							.domain(getVarNames())
 							.range(d3.schemeCategory20);
 
 function start(){
 	lineChart.selectAll('*').remove();
 	graphDow();
 	initBarChart();
+}
+
+function getVarNames(){
+	var toReturn = [];
+	for(series in valueData){
+		toReturn.push(series);
+	}
+	return toReturn;
 }
 
 //Graphs DOW average in the US
@@ -289,21 +299,21 @@ function graphDow(){
 	// var lineChartScale = d3.scaleOrdinal()
 	// 					.domain(['Dow', "Car Brand"])
 	// 					.range(['#3498db', "#9b59b6"]);
-	legend.append('g')
-	  .attr("class", "legendSymbol")
-	  .attr('fill', 'black')
-	  .attr('width', widthLeg)
-	  .attr('height', heightLeg)
-	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+	// legend.append('g')
+	//   .attr("class", "legendSymbol")
+	//   .attr('fill', 'black')
+	//   .attr('width', widthLeg)
+	//   .attr('height', heightLeg)
+	//   .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
 
-	var legendPath = d3.legendColor()
-	  .scale(linePlotColorScale)
-	  .shape('circle')
-	  .shapePadding(paddingLeg)
-	  .orient("horizontal");
+	// var legendPath = d3.legendColor()
+	//   .scale(linePlotColorScale)
+	//   .shape('circle')
+	//   .shapePadding(paddingLeg)
+	//   .orient("horizontal");
 
-	legend.select(".legendSymbol")
-	  .call(legendPath);
+	// legend.select(".legendSymbol")
+	//   .call(legendPath);
 
 	// console.log('here');
 	// console.log(legend.selectAll(".cell")
@@ -331,9 +341,9 @@ function plotAll(currVar, is_clicked){
 	legend.selectAll('*').remove();
 	var newDomain = toPlot.slice();
 	newDomain.push(currVar);
-	linePlotColorScale = d3.scaleOrdinal()
-							.domain(newDomain)
-							.range(d3.schemeCategory20);
+	// linePlotColorScale = d3.scaleOrdinal()
+	// 						.domain(newDomain)
+	// 						.range(d3.schemeCategory20);
 	console.log(toPlot);
 	if(is_clicked){
 		// if(selected.includes(currVar)){
@@ -479,24 +489,24 @@ function fullDataExtent(){
 
 function removePlot(varName){
 	legend.selectAll('*').remove();
-	linePlotColorScale = d3.scaleOrdinal()
-							.domain(toPlot)
-							.range(d3.schemeCategory20);
-	legend.append('g')
-	  .attr("class", "legendSymbol")
-	  .attr('fill', 'black')
-	  .attr('width', widthLeg)
-	  .attr('height', heightLeg)
-	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+	// linePlotColorScale = d3.scaleOrdinal()
+	// 						.domain(toPlot)
+	// 						.range(d3.schemeCategory20);
+	// legend.append('g')
+	//   .attr("class", "legendSymbol")
+	//   .attr('fill', 'black')
+	//   .attr('width', widthLeg)
+	//   .attr('height', heightLeg)
+	//   .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
 
-	var legendPath = d3.legendColor()
-	  .scale(linePlotColorScale)
-	  .shape('circle')
-	  .shapePadding(paddingLeg)
-	  .orient("horizontal");
+	// var legendPath = d3.legendColor()
+	//   .scale(linePlotColorScale)
+	//   .shape('circle')
+	//   .shapePadding(paddingLeg)
+	//   .orient("horizontal");
 
-	legend.select(".legendSymbol")
-	  .call(legendPath);
+	// legend.select(".legendSymbol")
+	//   .call(legendPath);
 
 	if(!toPlot.includes(varName)){
 		lineChart.select('#'+varName).remove();
@@ -531,7 +541,8 @@ function createBars(year){
 				.style("font-size",8)
 				.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
 				//.style()
-				.text(d.Name);
+				.text(d.Name)
+			
 			// bar overlay
 			barChart.append('line')
 				.attr('x1', 0)
@@ -542,6 +553,12 @@ function createBars(year){
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+d.Name+"')")
 				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
+
+			barChart.append('circle')
+				.attr('cx', paddingBC/1.8)
+				.attr('cy', heightScale(i)+2)
+				.attr('r', 5)
+				.style('fill', linePlotColorScale(d.Name));
 		}
 	)
 }
@@ -589,10 +606,11 @@ function dataAtYearRange(data, timeRange){
 function plotCorLine(varName, color, yExtent){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
-	var varData = dataAtYearRange(valueData[varName], [2006, 2012]);
+	console.log(varName);
+	var varData = dataAtYearRange(valueData[varName], [1994, 2014]);
 	//console.log(varData);
 	corX = d3.scaleTime()
-					.domain([parseTime(2006), parseTime(2012)])
+					.domain([parseTime(1994), parseTime(2014)])
 					.rangeRound([paddingCC, widthCC-paddingCC]);
 	//console.log('cor line');
 	//console.log(corX(parseTime(2006)));
@@ -695,7 +713,7 @@ function findYExtent(brands){
 function plotInvCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var invBrands = ["Dow", "Rolls Royce", "Maserati", "Bugatti"];
+	var invBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
 	var invColors = ['steelblue', 'red', 'green', 'purple'];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
@@ -704,25 +722,25 @@ function plotInvCorrelation(){
 	invBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), [-60,60]);
+		plotCorLine(b, invColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(invBrands);
 	//Legend
-	legend.append('g')
-	  .attr("class", "legendSymbol")
-	  .attr('fill', 'black')
-	  .attr('width', widthLeg)
-	  .attr('height', heightLeg)
-	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+	// legend.append('g')
+	//   .attr("class", "legendSymbol")
+	//   .attr('fill', 'black')
+	//   .attr('width', widthLeg)
+	//   .attr('height', heightLeg)
+	//   .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
 
-	var legendPath = d3.legendColor()
-	  .scale(invColorScale)
-	  .shape('circle')
-	  .shapePadding(paddingLeg)
-	  .orient("horizontal");
+	// var legendPath = d3.legendColor()
+	//   .scale(invColorScale)
+	//   .shape('circle')
+	//   .shapePadding(paddingLeg)
+	//   .orient("horizontal");
 
-	legend.select(".legendSymbol")
-	  .call(legendPath);
+	// legend.select(".legendSymbol")
+	//   .call(legendPath);
 }
 
 function plotPosCorrelation(){
@@ -738,25 +756,25 @@ function plotPosCorrelation(){
 	posBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(posColorScale(b))
-		plotCorLine(b, posColorScale(b), [-60,60]);
+		plotCorLine(b, posColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(posBrands);
 	//Legend
-	legend.append('g')
-	  .attr("class", "legendSymbol")
-	  .attr('fill', 'black')
-	  .attr('width', widthLeg)
-	  .attr('height', heightLeg)
-	  .attr('transform','translate('+((widthLeg/2)-(paddingLeg/2))+','+(heightLeg/2)+')');
+	// legend.append('g')
+	//   .attr("class", "legendSymbol")
+	//   .attr('fill', 'black')
+	//   .attr('width', widthLeg)
+	//   .attr('height', heightLeg)
+	//   .attr('transform','translate('+((widthLeg/2)-(paddingLeg/2))+','+(heightLeg/2)+')');
 
-	var legendPath = d3.legendColor()
-	  .scale(posColorScale)
-	  .shape('circle')
-	  .shapePadding(paddingLeg)
-	  .orient("horizontal");
+	// var legendPath = d3.legendColor()
+	//   .scale(posColorScale)
+	//   .shape('circle')
+	//   .shapePadding(paddingLeg)
+	//   .orient("horizontal");
 
-	legend.select(".legendSymbol")
-	  .call(legendPath);
+	// legend.select(".legendSymbol")
+	//   .call(legendPath);
 
 }
 
