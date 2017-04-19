@@ -774,7 +774,7 @@ function findYExtent(brands){
 	return toReturn;
 }
 
-function plotInvCorrelation(){
+function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var invBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
@@ -807,7 +807,7 @@ function plotInvCorrelation(){
 	//   .call(legendPath);
 }
 
-function plotPosCorrelation(){
+function plotInvCorrelation(){
 	console.log('pos correlation');
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
@@ -957,18 +957,35 @@ $(document).ready(function() {
 	});
 
    	var posCorPanel = new Waypoint({
-	  element: document.getElementById('panel2'),
-	  handler: plotPosCorrelation,
+	  element: document.getElementById('panel1'),
+	  handler: function(direction) {plotPosCorrelation();},
 	  	//function(){console.log('found panel');},
-	  offset: '60%'
+	  offset: '50%'
 	});
 
 	var invCorPanel = new Waypoint({
+	  element: document.getElementById('panel2'),
+	  handler:function(direction) {plotInvCorrelation();},
+	  	//function(){console.log('found panel');},
+	  offset: '50%'
+	});
+
+	var scrollingUpPos = new Waypoint({
 	  element: document.getElementById('panel1'),
 	  handler: plotInvCorrelation,
 	  	//function(){console.log('found panel');},
-	  offset: '60%'
+	  offset: '-20%'
 	});
+
+	var scrollingUpInv = new Waypoint({
+	  element: document.getElementById('panel2'),
+	  handler:function(direction) {
+	  	if(direction == 'up'){plotPosCorrelation();}
+	  },
+	  	//function(){console.log('found panel');},
+	  offset: 'bottom-in-view'
+	});
+
    	// setTimeout(function(){
    	// 	$("span").not(".word1,.word2").show(1500);
    	// }, 1000);
