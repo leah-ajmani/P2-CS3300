@@ -349,6 +349,7 @@ function plotAll(currVar, is_clicked){
 		else{
 			toPlot.push(currVar);
 		}
+		//toPlot.selectAll()
 	}
 	else{
 		plotLine(currVar);
@@ -387,7 +388,7 @@ function plotLine(varName){
 		.curve(d3.curveBasis)
 	    .x(function(d) { return lineX(d.Year); })
 	    .y(function(d) { return lineY(d.Value); });
-	
+	//console.log('length: ' + line.getTotalLength());
 	//Draw variable line plot
 	lineChart.append("path")
 		      .datum(varData)
@@ -397,6 +398,7 @@ function plotLine(varName){
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
 		      .attr('id', varName)
+		      .attr('class', 'dataLine')
 		      .attr("d", line);
 
 	//Draw axes
@@ -475,6 +477,32 @@ function fullDataExtent(){
 	return toReturn;
 }
 
+function removePlot(varName){
+	legend.selectAll('*').remove();
+	linePlotColorScale = d3.scaleOrdinal()
+							.domain(toPlot)
+							.range(d3.schemeCategory20);
+	legend.append('g')
+	  .attr("class", "legendSymbol")
+	  .attr('fill', 'black')
+	  .attr('width', widthLeg)
+	  .attr('height', heightLeg)
+	  .attr('transform','translate('+(widthLeg/2)+','+(heightLeg/2)+')');
+
+	var legendPath = d3.legendColor()
+	  .scale(linePlotColorScale)
+	  .shape('circle')
+	  .shapePadding(paddingLeg)
+	  .orient("horizontal");
+
+	legend.select(".legendSymbol")
+	  .call(legendPath);
+
+	if(!toPlot.includes(varName)){
+		lineChart.select('#'+varName).remove();
+	}
+}
+
 //Plots bars based on growth rate for [year]
 function createBars(year){
 	var valueScale = d3.scaleLinear()
@@ -502,6 +530,7 @@ function createBars(year){
 				.attr("y", heightScale(i)+4)
 				.style("font-size",8)
 				.style("text-shadow","0px 0px 5px rgba(255, 255, 255, 1)")
+				//.style()
 				.text(d.Name);
 			// bar overlay
 			barChart.append('line')
@@ -511,6 +540,7 @@ function createBars(year){
 				.attr('y2', heightScale(i))
 				.attr("class","barOverlay")
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
+				.attr("onmouseout", "removePlot('"+d.Name+"')")
 				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
 		}
 	)
@@ -674,7 +704,7 @@ function plotInvCorrelation(){
 	invBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), [-50,200]);
+		plotCorLine(b, invColorScale(b), [-60,60]);
 	});
 	generateSelectionChart(invBrands);
 	//Legend
