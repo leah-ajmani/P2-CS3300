@@ -85,10 +85,10 @@
 	.header_other{
 		color: #7f8c8d;
 	}
-	path.dataLine {
+	path.corLine {
 		stroke-dasharray: 1000;
 		stroke-dashoffset: 1000;
-		animation: draw 2s linear forwards;	
+		animation: draw 1.5s linear forwards;	
 	}
 	@keyframes draw {
 		50% { stroke-dashoffset: 1000; }
@@ -375,7 +375,7 @@ function plotAll(currVar, is_clicked){
 		//toPlot.selectAll()
 	}
 	else{
-		plotLine(currVar, true);
+		plotLine(currVar);
 	}
 	// linePlotColorScale = d3.scaleOrdinal()
 	// 						.domain(toPlot)
@@ -385,7 +385,7 @@ function plotAll(currVar, is_clicked){
 			graphDow();
 		}
 		else{
-				plotLine(p, false);
+				plotLine(p);
 		}
 	})
 }
@@ -394,7 +394,7 @@ function plotAll(currVar, is_clicked){
 
 //Graphs [varName] and Dow Industrial Average over time to the main
 //line chart
-function plotLine(varName, toAnimate){
+function plotLine(varName){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
 	//graphDow();
@@ -413,19 +413,19 @@ function plotLine(varName, toAnimate){
 	    .y(function(d) { return lineY(d.Value); });
 	//console.log('length: ' + line.getTotalLength());
 	//Draw variable line plot
-	if(toAnimate){
-		lineChart.append("path")
-			      .datum(varData)
-			      .attr("fill", "none")
-			      .attr("stroke", linePlotColorScale(varName))
-			      .attr("stroke-linejoin", "round")
-			      .attr("stroke-linecap", "round")
-			      .attr("stroke-width", 1.5)
-			      .attr('id', varName)
-			      .attr('class', 'dataLine')
-			      .attr("d", line);
-	} 
-	else{
+	// if(toAnimate){
+	// 	lineChart.append("path")
+	// 		      .datum(varData)
+	// 		      .attr("fill", "none")
+	// 		      .attr("stroke", linePlotColorScale(varName))
+	// 		      .attr("stroke-linejoin", "round")
+	// 		      .attr("stroke-linecap", "round")
+	// 		      .attr("stroke-width", 1.5)
+	// 		      .attr('id', varName)
+	// 		      .attr('class', 'dataLine')
+	// 		      .attr("d", line);
+	// } 
+	// else{
 		lineChart.append("path")
 			      .datum(varData)
 			      .attr("fill", "none")
@@ -436,7 +436,7 @@ function plotLine(varName, toAnimate){
 			      .attr('id', varName)
 			      //.attr('class', 'dataLine')
 			      .attr("d", line);
-	}
+	//}
 
 	//Draw axes
 	lineChart.append("text")
