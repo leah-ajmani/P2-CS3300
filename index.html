@@ -786,7 +786,7 @@ function plotInvCorrelation(){
 	invBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(invColorScale(b))
-		plotCorLine(b, linePlotColorScale(b), [-50,300]);
+		plotCorLine(b, invColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(invBrands);
 	//Legend
@@ -820,7 +820,7 @@ function plotPosCorrelation(){
 	posBrands.forEach(function(b){
 		//console.log(b);
 		//console.log(posColorScale(b))
-		plotCorLine(b, linePlotColorScale(b), [-50,300]);
+		plotCorLine(b, posColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(posBrands);
 	//Legend
@@ -957,14 +957,14 @@ $(document).ready(function() {
 	  element: document.getElementById('panel2'),
 	  handler: plotPosCorrelation,
 	  	//function(){console.log('found panel');},
-	  offset: '50%'
+	  offset: '60%'
 	});
 
 	var invCorPanel = new Waypoint({
 	  element: document.getElementById('panel1'),
 	  handler: plotInvCorrelation,
 	  	//function(){console.log('found panel');},
-	  offset: '50%'
+	  offset: '60%'
 	});
    	// setTimeout(function(){
    	// 	$("span").not(".word1,.word2").show(1500);
