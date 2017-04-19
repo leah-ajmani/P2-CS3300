@@ -135,7 +135,7 @@
 	<div class="graphs">
 		<!-- <svg id="legend"/> -->
 		<!-- <p id="rap_quote">"Lamborghini, mercy, your chick she's so thirsty / I'm in that two-seat Lambo with your girl, she's tryna jerk me"</p> -->
-		<p id="rap_quote">"Hover over car names to see their relationships with each other and the economy" - Leah, Saqif, Derrick</p>
+		<p id="rap_quote">"Hover and click on car names to see their relationships with each other and the economy" - Leah, Saqif, Derrick</p>
 		<br/>
 		<svg id="line-chart"/>
 		<!-- <svg id="correlation-chart"/> -->
@@ -304,7 +304,7 @@ function graphDow(){
 		      .attr("stroke", "#3498db")
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 2.1)
+		      .attr("stroke-width", 3)
 		      .attr("d", line);
 	
 	//Draws axes	      
@@ -777,7 +777,7 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
+	var posBrands = ["Dow", "Hummer", "Jeep", "Cadillac"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
