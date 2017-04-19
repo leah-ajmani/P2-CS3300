@@ -778,7 +778,7 @@ function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var posBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
-	var posColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
+	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
 							.domain(posBrands)
@@ -812,7 +812,7 @@ function plotInvCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var invBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
-	var invColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
+	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
 							.domain(invBrands)
