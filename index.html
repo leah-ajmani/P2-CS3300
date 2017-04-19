@@ -84,6 +84,18 @@
 	.header_other{
 		color: #7f8c8d;
 	}
+	path.dataLine {
+		stroke-dasharray: 1000;
+		stroke-dashoffset: 1000;
+		animation: draw 2s linear forwards;	
+	}
+	@keyframes draw {
+		50% { stroke-dashoffset: 1000; }
+		to { stroke-dashoffset: 0; }
+	}
+	/*@keyframes dash {
+		to { stroke-dashoffset: 0; }
+	}*/
 </style>
 </head>
 <body>
@@ -362,7 +374,7 @@ function plotAll(currVar, is_clicked){
 		//toPlot.selectAll()
 	}
 	else{
-		plotLine(currVar);
+		plotLine(currVar, true);
 	}
 	// linePlotColorScale = d3.scaleOrdinal()
 	// 						.domain(toPlot)
@@ -372,7 +384,7 @@ function plotAll(currVar, is_clicked){
 			graphDow();
 		}
 		else{
-			plotLine(p);
+				plotLine(p, false);
 		}
 	})
 }
@@ -381,7 +393,7 @@ function plotAll(currVar, is_clicked){
 
 //Graphs [varName] and Dow Industrial Average over time to the main
 //line chart
-function plotLine(varName){
+function plotLine(varName, toAnimate){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
 	//graphDow();
@@ -400,16 +412,30 @@ function plotLine(varName){
 	    .y(function(d) { return lineY(d.Value); });
 	//console.log('length: ' + line.getTotalLength());
 	//Draw variable line plot
-	lineChart.append("path")
-		      .datum(varData)
-		      .attr("fill", "none")
-		      .attr("stroke", linePlotColorScale(varName))
-		      .attr("stroke-linejoin", "round")
-		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 1.5)
-		      .attr('id', varName)
-		      .attr('class', 'dataLine')
-		      .attr("d", line);
+	if(toAnimate){
+		lineChart.append("path")
+			      .datum(varData)
+			      .attr("fill", "none")
+			      .attr("stroke", linePlotColorScale(varName))
+			      .attr("stroke-linejoin", "round")
+			      .attr("stroke-linecap", "round")
+			      .attr("stroke-width", 1.5)
+			      .attr('id', varName)
+			      .attr('class', 'dataLine')
+			      .attr("d", line);
+	} 
+	else{
+		lineChart.append("path")
+			      .datum(varData)
+			      .attr("fill", "none")
+			      .attr("stroke", linePlotColorScale(varName))
+			      .attr("stroke-linejoin", "round")
+			      .attr("stroke-linecap", "round")
+			      .attr("stroke-width", 1.5)
+			      .attr('id', varName)
+			      //.attr('class', 'dataLine')
+			      .attr("d", line);
+	}
 
 	//Draw axes
 	lineChart.append("text")
