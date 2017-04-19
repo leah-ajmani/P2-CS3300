@@ -85,6 +85,9 @@
 	.header_other{
 		color: #7f8c8d;
 	}
+	#rap_quote{
+		font-style: italic;
+	}
 	path.corLine {
 		stroke-dasharray: 1000;
 		stroke-dashoffset: 1000;
@@ -126,6 +129,9 @@
 
 	<div class="graphs">
 		<!-- <svg id="legend"/> -->
+		<!-- <p id="rap_quote">"Lamborghini, mercy, your chick she's so thirsty / I'm in that two-seat Lambo with your girl, she's tryna jerk me"</p> -->
+		<p id="rap_quote">"Hover over car names to see their relationships with each other, and the economy" - Leah, Saqif, Derrick</p>
+		<br/>
 		<svg id="line-chart"/>
 		<!-- <svg id="correlation-chart"/> -->
 		<svg id="bar-chart"/>
@@ -307,7 +313,12 @@ function graphDow(){
 		//.text("Percent Change in Album Sales Over Time")
 		.style("font-weight","bold")
 		.style("font-size",12);
-
+	lineChart.append("text")
+		.attr("x", paddingLC*2)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in DOW")
+		.style("font-weight","bold")
+		.style("font-size",12);
 	//Legend
 	// var lineChartScale = d3.scaleOrdinal()
 	// 					.domain(['Dow', "Car Brand"])
@@ -440,7 +451,7 @@ function plotLine(varName){
 
 	//Draw axes
 	lineChart.append("text")
-		.attr("x", paddingLC*1.4)
+		.attr("x", paddingLC*2)
 		.attr("y", paddingLC/2)
 		.text("Percent Change in DOW and Rap Mentions Over Time")
 		.style("font-weight","bold")
