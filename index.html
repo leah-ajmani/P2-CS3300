@@ -203,13 +203,24 @@ function parseSalesRow(d){
 	return {
 		Year: parseTime(d.Year),
 		Value: +d.Value
-	}
+	};
 }
 
-function parseMentions(d){
+function parseMentionRow(d){
+	//console.log(d);
 	return {
+		Name: d['Song Name'],
+		Lyric: parseLyric(d['Lyric'], d['Artist']),
+		Artist: d['Artist'],
+		Year: parseTime(d['Year']),
+		Brand: d['Car Brand']
+	};
+}
 
-	}
+function parseLyric(l, artist){
+	var lineBreaks = l.replace('/', '<br>')
+	var replacement = lineBreaks.replace('_', " ");
+	return replacement += '<br> - ' + artist
 }
 
 //Keeps all of the percent change data indexed by car brand name
@@ -220,8 +231,11 @@ var valueData = {};
 //(e.g., valueData['Mercedes Benz'] returns the number of times
 //Mercedes Benz was mentioned in rap lyrics
 var freqData = {};
-
-function initData(error,carData, dowData){
+var interestingPoints = [];
+function initData(error, carData, dowData, mentionData){
+	// console.log(carData);
+	// console.log(dowData);
+	// console.log(mentionData);
 	valueData['Dow'] = dowData;
 	carData.forEach(function(d){
 		for(var prop in d){
@@ -245,6 +259,11 @@ function initData(error,carData, dowData){
 			}
 		}
 	});
+
+	mentionData.forEach(function(d){
+		interestingPoints.push(d);
+		//console.log(interestingPoints);
+	})
 	//console.log(valueData);
 	//console.log(freqData);
 	//initFreqChart();
@@ -266,6 +285,7 @@ var linePlotColorScaleCool = d3.scaleOrdinal()
 
 function start(){
 	lineChart.selectAll('*').remove();
+	toPlot = ["Dow"];
 	graphDow();
 	initBarChart();
 }
@@ -422,7 +442,70 @@ function plotAll(currVar, is_clicked){
 	})
 }
 
+function pathToPointList(path){
+	//console.log(path);
+	var points = path.split(/(?=[LMC])/);
+	//console.log(points);
+	var pairsArray = [];
+	var pointArrays = points.map(function(d){
+	    var pointsArray = d.slice(1, d.length).split(',');
+	    for(var i = 0; i < pointsArray.length; i += 2){
+	        pairsArray.push([+pointsArray[i], +pointsArray[i+1]]);
+	        //console.log(pairsArray);
+	    }
+	});
+	return pairsArray;
+}
 
+function findPointByYear(year, pointsArray){
+	var matchingPoints = pointsArray.filter(function(p){
+		return lineX(year) == p[0];
+	});
+	return matchingPoints[0];
+}
+
+function showRapQuote(d){
+	console.log(d);
+	document.getElementById('rap_quote').innerHTML = d;
+}
+
+function plotInterestingPoints(varName, path){
+	var points = pathToPointList(path);
+	//console.log(points);
+
+	var varData = valueData[varName];
+	var circlePoints = interestingPoints.filter(function(p){
+							return p.Brand == varName;
+						});
+	circlePoints.forEach(function(d){
+		var index = d.Year - 1993;
+		var plotPoint = findPointByYear(d.Year, points);
+		console.log(plotPoint);
+		if(plotPoint != undefined){
+			var xPos = plotPoint[0];
+			var yPos = plotPoint[1];
+			// var xPos = points[index][0];
+			// var yPos = points[index][1];
+			// var xPos = lineX(d.Year);
+			// var index = d.Year.getFullYear() - 1993;
+			// console.log(d.Year);
+			// console.log(index);
+			// console.log(varData);
+			// var yPos = lineY(varData[index].Value);
+			console.log(d);
+			lineChart.append('circle')
+					// .attr('cx', xPos)
+					// .attr('cy', yPos)
+					.attr('r', 5)
+					.attr('fill', linePlotColorScale(d.Brand))
+					.attr('transform', 'translate(' + xPos + ',' + yPos+')')
+					.attr('onmouseover', "showRapQuote('"+d.Lyric+"')")
+					.attr('class', ('interesting'+varName));
+		}
+
+
+	});
+}
 
 //Graphs [varName] and Dow Industrial Average over time to the main
 //line chart
@@ -438,11 +521,13 @@ function plotLine(varName){
 	if(varName == 'Dow'){
 		return;
 	}
+
 	var varData = valueData[varName];
 	var line = d3.line()
 		.curve(d3.curveBasis)
 	    .x(function(d) { return lineX(d.Year); })
 	    .y(function(d) { return lineY(d.Value); });
+	
 	//console.log('length: ' + line.getTotalLength());
 	//Draw variable line plot
 	// if(toAnimate){
@@ -458,7 +543,7 @@ function plotLine(varName){
 	// 		      .attr("d", line);
 	// } 
 	// else{
-		lineChart.append("path")
+		var dataLine = lineChart.append("path")
 			      .datum(varData)
 			      .attr("fill", "none")
 			      .attr("stroke", linePlotColorScale(varName))
@@ -468,6 +553,7 @@ function plotLine(varName){
 			      .attr('id', varName)
 			      //.attr('class', 'dataLine')
 			      .attr("d", line);
+		plotInterestingPoints(varName, line(varData));
 	//}
 
 	//Draw axes
@@ -568,6 +654,7 @@ function removePlot(varName){
 
 	if(!toPlot.includes(varName)){
 		lineChart.select('#'+varName).remove();
+		lineChart.selectAll(('.interesting'+varName)).remove();
 	}
 }
 
@@ -777,7 +864,7 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
+	var posBrands = ["Dow", "Lamborghini", "Hummer", "Maserati"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
@@ -947,7 +1034,7 @@ var q = d3.queue();
 
 q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
 	.defer(d3.csv, 'dow.csv', parseSalesRow)
-	//.defer(d3.csv, 'carMentions.csv', parseMentionRow)
+	.defer(d3.csv, 'CarMentions.csv', parseMentionRow)
 	.await(initData);
 
 $(document).ready(function() {
