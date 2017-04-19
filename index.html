@@ -392,12 +392,17 @@ function plotAll(currVar, is_clicked){
 		// 	index = selected.indexOf(currVar);
 		// 	selected.splice(index,1)
 		// }
-		if(toPlot.includes(currVar)){
-			var index = toPlot.indexOf(currVar);
-			toPlot.splice(index, 1);
+		if(currVar == "Dow"){
+			toPlot = ["Dow"]
 		}
 		else{
-			toPlot.push(currVar);
+			if(toPlot.includes(currVar)){
+				var index = toPlot.indexOf(currVar);
+				toPlot.splice(index, 1);
+			}
+			else{
+				toPlot.push(currVar);
+			}
 		}
 		//toPlot.selectAll()
 	}
