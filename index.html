@@ -777,18 +777,18 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var invBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
-	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
-	var yExtent = findYExtent(invBrands);
-	var invColorScale = d3.scaleOrdinal()
-							.domain(invBrands)
-							.range(invColors);
-	invBrands.forEach(function(b){
+	var posBrands = ["Dow", "Rolls-Royce", "Maserati", "Bugatti"];
+	var posColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
+	var yExtent = findYExtent(posBrands);
+	var posColorScale = d3.scaleOrdinal()
+							.domain(posBrands)
+							.range(posColors);
+	posBrands.forEach(function(b){
 		//console.log(b);
-		//console.log(invColorScale(b))
-		plotCorLine(b, invColorScale(b), [-50,300]);
+		//console.log(posColorScale(b))
+		plotCorLine(b, posColorScale(b), [-50,300]);
 	});
-	generateSelectionChart(invBrands);
+	generateSelectionChart(posBrands);
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -808,21 +808,21 @@ function plotPosCorrelation(){
 }
 
 function plotInvCorrelation(){
-	console.log('pos correlation');
+	console.log('inv correlation');
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
-	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
-	var yExtent = findYExtent(posBrands);
-	var posColorScale = d3.scaleOrdinal()
-							.domain(posBrands)
-							.range(posColors);
-	posBrands.forEach(function(b){
+	var invBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
+	var invColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
+	var yExtent = findYExtent(invBrands);
+	var invColorScale = d3.scaleOrdinal()
+							.domain(invBrands)
+							.range(invColors);
+	invBrands.forEach(function(b){
 		//console.log(b);
-		//console.log(posColorScale(b))
-		plotCorLine(b, posColorScale(b), [-50,300]);
+		//console.log(invColorScale(b))
+		plotCorLine(b, invColorScale(b), [-50,300]);
 	});
-	generateSelectionChart(posBrands);
+	generateSelectionChart(invBrands);
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
