@@ -22,7 +22,7 @@
 	}
 	svg{
 		background-color: white;
-		border: 1px solid #ecf0f1;
+		/*border: 1px solid #ecf0f1;*/
 	}
 	hr{
 		border: 0;
@@ -131,7 +131,7 @@
 		<svg id="bar-chart"/>
 		<!-- <svg id="slider"/> -->
 		<!-- <svg id="freq-chart" width='700' height='700'/> -->
-		<p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p>
+		<!-- <p class="credits">by Leah Ajmani, Saqif Badruddin, and Derrick Ho</p> -->
 	</div>
 	
 <script>
@@ -554,13 +554,13 @@ function createBars(year){
 	barData.forEach(
 		function(d, i){
 			// bar
-			barChart.append('line')
-				.attr('x1', lengthScale(0))
-				.attr('y1', heightScale(i))
-				.attr('x2', lengthScale(valueScale(d.Value)))
-				.attr('y2', heightScale(i))
-				.style('stroke', colorScale(valueScale(d.Value)))
-				.style('stroke-width', 15);
+			// barChart.append('line')
+			// 	.attr('x1', lengthScale(0))
+			// 	.attr('y1', heightScale(i))
+			// 	.attr('x2', lengthScale(valueScale(d.Value)))
+			// 	.attr('y2', heightScale(i))
+			// 	.style('stroke', colorScale(valueScale(d.Value)))
+			// 	.style('stroke-width', 15);
 			// bar text
 			barChart.append("text")
 				.attr("x", paddingBC/1.5)
