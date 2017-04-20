@@ -294,12 +294,12 @@ var selected = [];
 var linePlotColorScale = d3.scaleOrdinal()
 							.domain(getVarNames())
 							.range(d3.schemeCategory20);
-var linePlotColorScaleWarm = d3.scaleOrdinal()
-							.domain(getVarNames())
-							.range("#3498db","#f1c40f","#e67e22","#e74c3c");
-var linePlotColorScaleCool = d3.scaleOrdinal()
-							.domain(getVarNames())
-							.range("#3498db","#9b59b6","#1abc9c","#2ecc71");
+// var linePlotColorScaleWarm = d3.scaleOrdinal()
+// 							.domain(getVarNames())
+// 							.range("#3498db","#f1c40f","#e67e22","#e74c3c");
+// var linePlotColorScaleCool = d3.scaleOrdinal()
+// 							.domain(getVarNames())
+// 							.range("#3498db","#9b59b6","#1abc9c","#2ecc71");
 
 function start(){
 	lineChart.selectAll('*').remove();
@@ -746,7 +746,12 @@ function createBars(year){
 				.attr('y1', heightScale(i))
 				.attr('x2', widthBC)
 				.attr('y2', heightScale(i))
-				.attr("class","barOverlay")
+				.attr("class",function(){
+					if(d.Name != 'DOW'){
+						return 'barOverlay';
+					}
+					return 'barOverlay opLow';
+				})
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+d.Name+"')")
 				.attr("onclick", "plotAll('"+d.Name+"'," + true + ");toggleOpacity(this);");
@@ -762,6 +767,9 @@ function createBars(year){
 
 function toggleOpacity(element){
 	// alert($(element).hasClass("opLow"));
+	if($(element).attr('onmouseover') == "plotAll('DOW',false)"){
+		return;
+	}
 	if($(element).hasClass("opLow")){
 		$(element).removeClass("opLow");
 		$(element).addClass("opHigh");
@@ -995,7 +1003,7 @@ function plotInvCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
 	var invBrands = ["DOW", "Chevrolet", "Porsche", "Audi"];
-	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
+	var invColors = ["#3498db","#9b59b6","#1abc9c","#34495e"];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
 							.domain(invBrands)
