@@ -88,6 +88,11 @@
 	#rap_quote{
 		font-style: italic;
 		margin: 10px;
+		text-align: center;
+		font-size: 10px;
+		/*margin-left: -300px;*/
+		max-width: 600px;
+		height: 40px;
 	}
 	#bar-chart{
 		margin-left: -30px;
@@ -135,7 +140,7 @@
 	<div class="graphs">
 		<!-- <svg id="legend"/> -->
 		<!-- <p id="rap_quote">"Lamborghini, mercy, your chick she's so thirsty / I'm in that two-seat Lambo with your girl, she's tryna jerk me"</p> -->
-		<p id="rap_quote">"Hover and click on car names to see their relationships with each other and the economy" - Leah, Saqif, Derrick</p>
+		<p id="rap_quote">Hover and click on car names to see their relationships with each other and the economy<br/>- Leah, Saqif, Derrick</p>
 		<br/>
 		<svg id="line-chart"/>
 		<!-- <svg id="correlation-chart"/> -->
@@ -864,7 +869,7 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Lamborghini", "Hummer", "Maserati"];
+	var posBrands = ["Dow", "Lamborghini", "Hummer", "Jeep"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
