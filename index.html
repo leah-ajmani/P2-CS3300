@@ -85,6 +85,12 @@
 	.header_other{
 		color: #7f8c8d;
 	}
+	.opLow{
+		stroke-opacity: 0;
+	}
+	.opHigh{
+		stroke-opacity: 0.5;
+	}
 	#rap_quote{
 		font-style: italic;
 		margin: 10px;
@@ -713,7 +719,7 @@ function createBars(year){
 				.attr("class","barOverlay")
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+d.Name+"')")
-				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
+				.attr("onclick", "plotAll('"+d.Name+"'," + true + ");toggleOpacity(this);");
 
 			barChart.append('circle')
 				.attr('cx', paddingBC/3)
@@ -722,6 +728,21 @@ function createBars(year){
 				.style('fill', linePlotColorScale(d.Name));
 		}
 	)
+}
+
+function toggleOpacity(element){
+	// alert($(element).hasClass("opLow"));
+	if($(element).hasClass("opLow")){
+		$(element).removeClass("opLow");
+		$(element).addClass("opHigh");
+	}
+	else if($(element).hasClass("opHigh")){
+		$(element).removeClass("opHigh");
+		$(element).addClass("opLow");
+	}
+	else{
+		$(element).addClass("opLow");
+	}
 }
 
 //Draws the midline for the bar chart
