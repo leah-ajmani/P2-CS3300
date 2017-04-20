@@ -122,7 +122,7 @@
 		<div class="v_spacer"></div>
 		<div id="panel1">
 			<h2 class="header_positive">Correlation</h2>
-			<p>Cars, especially expensive cars, have always been seen as a status symbol in rap music. When the economy is up, rappers rap about some the most expensive and gaudy cars. Known for their exotic designs and loud engines, Lamborghini, Bugatti and Bentley all get mentioned more when the economy is doing well.</p>
+			<p>Cars, especially expensive cars, have always been seen as a status symbol in rap music. When the economy is up, rappers rap about some the most expensive and gaudy cars. Known for their exotic designs and loud engines, Bentley, Ferrari and Lamborghini all get mentioned more when the economy is doing well.</p>
 		</div>
 		<div class="v_spacer"></div>
 
@@ -686,7 +686,7 @@ function findYExtent(brands){
 
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
-	var posBrands = ["DOW", "Lamborghini", "Bugatti", "Bentley"];
+	var posBrands = ["DOW", "Lamborghini", "Ferrari", "Bentley"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
@@ -791,7 +791,7 @@ $(document).ready(function() {
 	var invCorPanel = new Waypoint({
 	  element: document.getElementById('panel2'),
 	  handler:function(direction) {plotInvCorrelation();},
-	  offset: '50%'
+	  offset: '60%'
 	});
 
 	var scrollingUpPos = new Waypoint({
