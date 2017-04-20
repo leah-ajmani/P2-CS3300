@@ -746,7 +746,12 @@ function createBars(year){
 				.attr('y1', heightScale(i))
 				.attr('x2', widthBC)
 				.attr('y2', heightScale(i))
-				.attr("class","barOverlay")
+				.attr("class",function(){
+					if(d.Name != 'DOW'){
+						return 'barOverlay';
+					}
+					return 'barOverlay opLow';
+				})
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+d.Name+"')")
 				.attr("onclick", "plotAll('"+d.Name+"'," + true + ");toggleOpacity(this);");
@@ -762,6 +767,9 @@ function createBars(year){
 
 function toggleOpacity(element){
 	// alert($(element).hasClass("opLow"));
+	if($(element).attr('onmouseover') == "plotAll('DOW',false)"){
+		return;
+	}
 	if($(element).hasClass("opLow")){
 		$(element).removeClass("opLow");
 		$(element).addClass("opHigh");
