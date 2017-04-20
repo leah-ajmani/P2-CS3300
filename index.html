@@ -122,13 +122,13 @@
 		<div class="v_spacer"></div>
 		<div id="panel1">
 			<h2 class="header_positive">Correlation</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<p>Cars, especially expensive cars, have always been seen as a status symbol in rap music. When the economy is up, rappers rap about some the most expensive and gaudy cars. Known for their exotic designs and loud engines, Lamborghini, Bugatti and Bentley all get mentioned more when the economy is doing well.</p>
 		</div>
 		<div class="v_spacer"></div>
 
 		<div id="panel2">
 			<h2 class="header_negative">Inverse Correlation</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<p>Rappers tend to write about cheaper cars when the economy is down. Audi, Porsche and Chevrolet were all rapped about more during the Great Recession. While these brands are still sporty, they all sell models that are below $50,000.</p>
 		</div>
 	</div>
 
@@ -291,7 +291,7 @@ function graphDow(){
 		      .attr("stroke", "#3498db")
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
-		      .attr("stroke-width", 3)
+		      .attr("stroke-width", 5)
 		      .attr("d", line)
 		      .attr('id', 'Dow')
 		      .attr('onmouseover', "displayName(this.id)")
@@ -475,7 +475,8 @@ function plotLine(varName){
 			      .attr("stroke", linePlotColorScale(varName))
 			      .attr("stroke-linejoin", "round")
 			      .attr("stroke-linecap", "round")
-			      .attr("stroke-width", 1.5)
+			      .attr("stroke-width", 3.5)
+			      .attr("stroke-opacity", .7)
 			      .attr('id', varName)
 			      .attr('onmouseover', "displayName('"+varName+"')")
 			      .attr('onmouseout', "removeName('"+varName+"')")
@@ -685,7 +686,7 @@ function findYExtent(brands){
 
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
-	var posBrands = ["DOW", "Lamborghini", "Hummer", "Jeep"];
+	var posBrands = ["DOW", "Lamborghini", "Bugatti", "Bentley"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
