@@ -449,10 +449,14 @@ function displayName(varName){
 	var totalLength = line.getTotalLength();
 	var endpoint = line.getPointAtLength(totalLength);
 	lineChart.append('text')
-			.attr('x', endpoint.x)
-			.attr('y', endpoint.y)
+			.attr('x', widthLC/2)
+			.attr('y', 110)
 			.attr('id', 'text'+varName)
-			.text(varName);
+			.attr('text-anchor','middle')
+			.attr('alignment-baseline','middle')
+			.text(varName)
+			.style("font-size",20)
+			.style("opacity",0.5);
 }
 
 //Graphs [varName] over time to the main line chart
