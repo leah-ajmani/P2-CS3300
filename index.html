@@ -881,6 +881,11 @@ function plotPosCorrelation(){
 		plotCorLine(b, posColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(posBrands);
+	lineChart.append("text")
+		.attr("x", paddingLC*1.7)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in DOW and Rap Mentions Over Time")
+		.style("font-weight","bold");
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -915,6 +920,11 @@ function plotInvCorrelation(){
 		plotCorLine(b, invColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(invBrands);
+	lineChart.append("text")
+		.attr("x", paddingLC*1.7)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in DOW and Rap Mentions Over Time")
+		.style("font-weight","bold");
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
