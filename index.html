@@ -114,7 +114,7 @@
 	path.corLine {
 		stroke-dasharray: 1000;
 		stroke-dashoffset: 1000;
-		animation: draw 1.5s linear forwards;	
+		animation: draw 2s linear forwards;	
 	}
 	@keyframes draw {
 		50% { stroke-dashoffset: 1000; }
@@ -858,7 +858,7 @@ function plotCorLine(varName, color, yExtent){
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
-		      .style('stroke-dasharray', 'this.getTotalLength()')
+		      .style('stroke-dashoffset', 'this.getTotalLength()')
 		      .attr("d", line);
 
 	//Draw axes
@@ -956,6 +956,22 @@ function plotPosCorrelation(){
 		.attr("y", paddingLC/2)
 		.text("Percent Change in DOW and Rap Mentions Over Time")
 		.style("font-weight","bold");
+	/*var path = document.querySelector('.corLine path');
+	var length = path.getTotalLength();
+	// Clear any previous transition
+	path.style.transition = path.style.WebkitTransition =
+	  'none';
+	// Set up the starting positions
+	path.style.strokeDasharray = length + ' ' + length;
+	path.style.strokeDashoffset = length;
+	// Trigger a layout so styles are calculated & the browser
+	// picks up the starting position before animating
+	path.getBoundingClientRect();
+	// Define our transition
+	path.style.transition = path.style.WebkitTransition =
+	  'stroke-dashoffset 2s ease-in-out';
+	// Go!
+	path.style.strokeDashoffset = '0';*/
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -1125,7 +1141,7 @@ var q = d3.queue();
 
 q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
 	.defer(d3.csv, 'dow.csv', parseSalesRow)
-	.defer(d3.csv, 'CarMentions.csv', parseMentionRow)
+	.defer(d3.csv, 'CarMentions34.csv', parseMentionRow)
 	.await(initData);
 
 $(document).ready(function() {
