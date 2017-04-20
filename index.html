@@ -68,6 +68,7 @@
 	}
 	.barOverlay:hover{
 		stroke-opacity: 0;
+		cursor:pointer;
 	}
 	.slider .handle {
 	  fill: #fff;
@@ -108,7 +109,7 @@
 		stroke: white;
 	}
 	circle.interesting:hover{
-		stroke: black;
+		stroke: #C0C0C0;
 	}
 	path.corLine {
 		stroke-dasharray: 1000;
@@ -857,6 +858,7 @@ function plotCorLine(varName, color, yExtent){
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 1.5)
+		      .style('stroke-dasharray', 'this.getTotalLength()')
 		      .attr("d", line);
 
 	//Draw axes
