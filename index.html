@@ -342,7 +342,10 @@ function graphDow(){
 		      .attr("stroke-linejoin", "round")
 		      .attr("stroke-linecap", "round")
 		      .attr("stroke-width", 3)
-		      .attr("d", line);
+		      .attr("d", line)
+		      .attr('id', 'Dow')
+		      .attr('onmouseover', "displayName(this.id)")
+			  .attr('onmouseout', "removeName(this.id)");
 	
 	//Draws axes	      
 	lineChart.append("g")
@@ -517,12 +520,16 @@ function plotInterestingPoints(varName, path){
 					.attr('fill', linePlotColorScale(d.Brand))
 					.attr('transform', 'translate(' + xPos + ',' + yPos+')')
 					.attr('onmouseover', "showRapQuote('"+d.Lyric+"')")
-					.attr('class', ('interesting'+varName))
+					.attr('id', ('interesting'+varName))
 					.attr('class', 'interesting');
 		}
 
 
 	});
+}
+
+function removeName(varName){
+	d3.select('#text'+varName).remove();
 }
 
 function displayName(varName){
@@ -534,6 +541,7 @@ function displayName(varName){
 	lineChart.append('text')
 			.attr('x', endpoint.x)
 			.attr('y', endpoint.y)
+			.attr('id', 'text'+varName)
 			.text(varName);
 }
 
@@ -582,6 +590,7 @@ function plotLine(varName){
 			      .attr("stroke-width", 1.5)
 			      .attr('id', varName)
 			      .attr('onmouseover', "displayName('"+varName+"')")
+			      .attr('onmouseout', "removeName('"+varName+"')")
 			      //.attr('class', 'dataLine')
 			      .attr("d", line);
 		plotInterestingPoints(varName, line(varData));
@@ -696,7 +705,7 @@ function removePlot(varName){
 
 	if(!toPlot.includes(varName)){
 		lineChart.select('#'+varName).remove();
-		lineChart.selectAll(('.interesting'+varName)).remove();
+		lineChart.selectAll(('#interesting'+varName)).remove();
 	}
 }
 
