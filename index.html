@@ -255,7 +255,7 @@ var toPlot = ["DOW"];
 
 //Color scale for the first chart
 var linePlotColorScale = d3.scaleOrdinal()
-							.domain(getVarNames())
+							.domain(Object.keys(valueData))
 							.range(d3.schemeCategory20);
 
 //Initializes the chart with a graph of DOW
@@ -266,14 +266,6 @@ function start(){
 	initBarChart();
 }
 
-//Gets the names of all of the car brands
-function getVarNames(){
-	var toReturn = [];
-	for(series in valueData){
-		toReturn.push(series);
-	}
-	return toReturn;
-}
 
 //Graphs DOW average in the US
 function graphDow(){
@@ -346,7 +338,12 @@ function plotAll(currVar, is_clicked){
 	if(is_clicked){
 		//Clear lines when DOW is selected
 		if(currVar == "DOW"){
-			toPlot = ["DOW"]
+			//Reset transperencies
+			d3.selectAll(".barOverlay")
+				.attr('class', 'barOverlay opHigh');
+			d3.select("#dowOverlay")
+				.attr('class', 'barOverlay opLow')
+			toPlot = ["DOW"];
 		}
 		else{
 			if(toPlot.includes(currVar)){
@@ -526,6 +523,11 @@ function createBarChart(){
 						return 'barOverlay';
 					}
 					return 'barOverlay opLow';
+				})
+				.attr("id", function(){
+					if(series == 'DOW'){
+						return 'dowOverlay';
+					}
 				})
 				.attr("onmouseover","plotAll('"+series+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+series+"')")
