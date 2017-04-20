@@ -85,9 +85,20 @@
 	.header_other{
 		color: #7f8c8d;
 	}
+	.opLow{
+		stroke-opacity: 0;
+	}
+	.opHigh{
+		stroke-opacity: 0.5;
+	}
 	#rap_quote{
 		font-style: italic;
 		margin: 10px;
+		text-align: center;
+		font-size: 10px;
+		/*margin-left: -300px;*/
+		max-width: 600px;
+		height: 40px;
 	}
 	#bar-chart{
 		margin-left: -30px;
@@ -141,7 +152,7 @@
 	<div class="graphs">
 		<!-- <svg id="legend"/> -->
 		<!-- <p id="rap_quote">"Lamborghini, mercy, your chick she's so thirsty / I'm in that two-seat Lambo with your girl, she's tryna jerk me"</p> -->
-		<p id="rap_quote">"Hover and click on car names to see their relationships with each other and the economy" - Leah, Saqif, Derrick</p>
+		<p id="rap_quote">Hover and click on car names to see their relationships with each other and the economy<br/>- Leah, Saqif, Derrick</p>
 		<br/>
 		<svg id="line-chart"/>
 		<!-- <svg id="correlation-chart"/> -->
@@ -242,7 +253,7 @@ function initData(error, carData, dowData, mentionData){
 	// console.log(carData);
 	// console.log(dowData);
 	// console.log(mentionData);
-	valueData['Dow'] = dowData;
+	valueData['DOW'] = dowData;
 	carData.forEach(function(d){
 		for(var prop in d){
 			if(prop != 'Year'){
@@ -277,7 +288,7 @@ function initData(error, carData, dowData, mentionData){
 
 /******************LINE CHART******************************/
 var lineX, lineY;
-var toPlot = ["Dow"];
+var toPlot = ["DOW"];
 var selected = [];
 var linePlotColorScale = d3.scaleOrdinal()
 							.domain(getVarNames())
@@ -291,7 +302,7 @@ var linePlotColorScaleCool = d3.scaleOrdinal()
 
 function start(){
 	lineChart.selectAll('*').remove();
-	toPlot = ["Dow"];
+	toPlot = ["DOW"];
 	graphDow();
 	initBarChart();
 }
@@ -307,7 +318,7 @@ function getVarNames(){
 //Graphs DOW average in the US
 function graphDow(){
 	legend.selectAll('*').remove();
-	dowData = valueData['Dow'];
+	dowData = valueData['DOW'];
 	//Initialize axes
 	lineX = d3.scaleTime()
 					.domain(d3.extent(dowData, function(d){return d.Year;}))
@@ -363,7 +374,7 @@ function graphDow(){
 		.style("font-weight","bold");
 	//Legend
 	// var lineChartScale = d3.scaleOrdinal()
-	// 					.domain(['Dow', "Car Brand"])
+	// 					.domain(['DOW', "Car Brand"])
 	// 					.range(['#3498db', "#9b59b6"]);
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -392,7 +403,7 @@ function plotCurr(){
 	//toPlot.push(toAdd);
 	console.log(toPlot);
 	toPlot.forEach(function(p){
-		if(p == "Dow"){
+		if(p == "DOW"){
 			//graphDow();
 		}
 		else{
@@ -418,8 +429,8 @@ function plotAll(currVar, is_clicked){
 		// 	index = selected.indexOf(currVar);
 		// 	selected.splice(index,1)
 		// }
-		if(currVar == "Dow"){
-			toPlot = ["Dow"]
+		if(currVar == "DOW"){
+			toPlot = ["DOW"]
 		}
 		else{
 			if(toPlot.includes(currVar)){
@@ -439,7 +450,7 @@ function plotAll(currVar, is_clicked){
 	// 						.domain(toPlot)
 	// 						.range(d3.schemeCategory20);
 	toPlot.forEach(function(p){
-		if(p == "Dow"){
+		if(p == "DOW"){
 			graphDow();
 		}
 		else{
@@ -537,7 +548,7 @@ function plotLine(varName){
 	// 						.domain(toPlot)
 	// 						.range(d3.schemeCategory20);
 
-	if(varName == 'Dow'){
+	if(varName == 'DOW'){
 		return;
 	}
 
@@ -583,7 +594,18 @@ function plotLine(varName){
 		.text("Percent Change in DOW and Rap Mentions Over Time")
 		.style("font-weight","bold");
 
-	
+	// CREATES DOW RECT
+	// lineChart.append("rect")
+	// 	.attr("x", widthLC - 2.1*paddingLC)
+	// 	.attr("y", paddingLC - 4)
+	// 	.attr("fill", "#3498db")
+	// 	.attr("width",10)
+	// 	.attr("height",10);
+	// lineChart.append("text")
+	// 	.attr("x", widthLC - 2.1*paddingLC + 13)
+	// 	.attr("y", paddingLC+4)
+	// 	.text("DOW (Economic Indicator)")
+	// 	.style("font-size",8);
 }
 
 
@@ -717,7 +739,7 @@ function createBars(year){
 				.attr("class","barOverlay")
 				.attr("onmouseover","plotAll('"+d.Name+"'," + false + ")")
 				.attr("onmouseout", "removePlot('"+d.Name+"')")
-				.attr("onclick", "plotAll('"+d.Name+"'," + true + ")");
+				.attr("onclick", "plotAll('"+d.Name+"'," + true + ");toggleOpacity(this);");
 
 			barChart.append('circle')
 				.attr('cx', paddingBC/3)
@@ -728,6 +750,21 @@ function createBars(year){
 	)
 }
 
+function toggleOpacity(element){
+	// alert($(element).hasClass("opLow"));
+	if($(element).hasClass("opLow")){
+		$(element).removeClass("opLow");
+		$(element).addClass("opHigh");
+	}
+	else if($(element).hasClass("opHigh")){
+		$(element).removeClass("opHigh");
+		$(element).addClass("opLow");
+	}
+	else{
+		$(element).addClass("opLow");
+	}
+}
+
 //Draws the midline for the bar chart
 //defaults to percent change chart for 1994
 function initBarChart(){
@@ -735,6 +772,13 @@ function initBarChart(){
 	lengthScale = d3.scaleLinear()
 						.domain([-widthBC/2, widthBC/2])
 						.range([0, widthBC]);
+	barChart.append("line")
+		.attr("x1", 14)
+		.attr("y1", heightBC - paddingBC + 1)
+		.attr("x2", 100)
+		.attr("y2", heightBC - paddingBC + 1)
+		.attr("stroke", "#ecf0f1")
+		.attr("stroke-width", 13);
 	createBars(1994);
 	barChart.append('line')
 			.attr('x1', lengthScale(0))
@@ -772,7 +816,7 @@ function dataAtYearRange(data, timeRange){
 function plotCorLine(varName, color, yExtent){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
-	if(varName == "Dow"){
+	if(varName == "DOW"){
 		graphDow();
 		return;
 	}
@@ -845,7 +889,7 @@ function highlight(varName){
 	lineChart.select('#'+varName)
 			.attr('stroke-opacity', 1)
 			.attr('stroke-width', 3);
-	lineChart.select('#Dow')
+	lineChart.select('#DOW')
 			.attr('stroke-opacity', 1)
 			.attr('stroke-width', 3);
 }
@@ -884,7 +928,7 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Lamborghini", "Hummer", "Maserati"];
+	var posBrands = ["DOW", "Lamborghini", "Hummer", "Jeep"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
@@ -896,6 +940,11 @@ function plotPosCorrelation(){
 		plotCorLine(b, posColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(posBrands);
+	lineChart.append("text")
+		.attr("x", paddingLC*1.7)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in DOW and Rap Mentions Over Time")
+		.style("font-weight","bold");
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -918,7 +967,7 @@ function plotInvCorrelation(){
 	console.log('inv correlation');
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var invBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
+	var invBrands = ["DOW", "Chevrolet", "Porsche", "Audi"];
 	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
@@ -930,6 +979,11 @@ function plotInvCorrelation(){
 		plotCorLine(b, invColorScale(b), [-50,300]);
 	});
 	generateSelectionChart(invBrands);
+	lineChart.append("text")
+		.attr("x", paddingLC*1.7)
+		.attr("y", paddingLC/2)
+		.text("Percent Change in DOW and Rap Mentions Over Time")
+		.style("font-weight","bold");
 	//Legend
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
