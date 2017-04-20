@@ -241,7 +241,7 @@ function initData(error, carData, dowData, mentionData){
 	// console.log(carData);
 	// console.log(dowData);
 	// console.log(mentionData);
-	valueData['Dow'] = dowData;
+	valueData['DOW'] = dowData;
 	carData.forEach(function(d){
 		for(var prop in d){
 			if(prop != 'Year'){
@@ -276,7 +276,7 @@ function initData(error, carData, dowData, mentionData){
 
 /******************LINE CHART******************************/
 var lineX, lineY;
-var toPlot = ["Dow"];
+var toPlot = ["DOW"];
 var selected = [];
 var linePlotColorScale = d3.scaleOrdinal()
 							.domain(getVarNames())
@@ -290,7 +290,7 @@ var linePlotColorScaleCool = d3.scaleOrdinal()
 
 function start(){
 	lineChart.selectAll('*').remove();
-	toPlot = ["Dow"];
+	toPlot = ["DOW"];
 	graphDow();
 	initBarChart();
 }
@@ -306,7 +306,7 @@ function getVarNames(){
 //Graphs DOW average in the US
 function graphDow(){
 	legend.selectAll('*').remove();
-	dowData = valueData['Dow'];
+	dowData = valueData['DOW'];
 	//Initialize axes
 	lineX = d3.scaleTime()
 					.domain(d3.extent(dowData, function(d){return d.Year;}))
@@ -362,7 +362,7 @@ function graphDow(){
 		.style("font-weight","bold");
 	//Legend
 	// var lineChartScale = d3.scaleOrdinal()
-	// 					.domain(['Dow', "Car Brand"])
+	// 					.domain(['DOW', "Car Brand"])
 	// 					.range(['#3498db', "#9b59b6"]);
 	// legend.append('g')
 	//   .attr("class", "legendSymbol")
@@ -391,7 +391,7 @@ function plotCurr(){
 	//toPlot.push(toAdd);
 	console.log(toPlot);
 	toPlot.forEach(function(p){
-		if(p == "Dow"){
+		if(p == "DOW"){
 			//graphDow();
 		}
 		else{
@@ -417,8 +417,8 @@ function plotAll(currVar, is_clicked){
 		// 	index = selected.indexOf(currVar);
 		// 	selected.splice(index,1)
 		// }
-		if(currVar == "Dow"){
-			toPlot = ["Dow"]
+		if(currVar == "DOW"){
+			toPlot = ["DOW"]
 		}
 		else{
 			if(toPlot.includes(currVar)){
@@ -438,7 +438,7 @@ function plotAll(currVar, is_clicked){
 	// 						.domain(toPlot)
 	// 						.range(d3.schemeCategory20);
 	toPlot.forEach(function(p){
-		if(p == "Dow"){
+		if(p == "DOW"){
 			graphDow();
 		}
 		else{
@@ -523,7 +523,7 @@ function plotLine(varName){
 	// 						.domain(toPlot)
 	// 						.range(d3.schemeCategory20);
 
-	if(varName == 'Dow'){
+	if(varName == 'DOW'){
 		return;
 	}
 
@@ -568,7 +568,18 @@ function plotLine(varName){
 		.text("Percent Change in DOW and Rap Mentions Over Time")
 		.style("font-weight","bold");
 
-	
+	// CREATES DOW RECT
+	// lineChart.append("rect")
+	// 	.attr("x", widthLC - 2.1*paddingLC)
+	// 	.attr("y", paddingLC - 4)
+	// 	.attr("fill", "#3498db")
+	// 	.attr("width",10)
+	// 	.attr("height",10);
+	// lineChart.append("text")
+	// 	.attr("x", widthLC - 2.1*paddingLC + 13)
+	// 	.attr("y", paddingLC+4)
+	// 	.text("DOW (Economic Indicator)")
+	// 	.style("font-size",8);
 }
 
 
@@ -720,6 +731,13 @@ function initBarChart(){
 	lengthScale = d3.scaleLinear()
 						.domain([-widthBC/2, widthBC/2])
 						.range([0, widthBC]);
+	barChart.append("line")
+		.attr("x1", 14)
+		.attr("y1", heightBC - paddingBC + 1)
+		.attr("x2", 100)
+		.attr("y2", heightBC - paddingBC + 1)
+		.attr("stroke", "#ecf0f1")
+		.attr("stroke-width", 13);
 	createBars(1994);
 	barChart.append('line')
 			.attr('x1', lengthScale(0))
@@ -757,7 +775,7 @@ function dataAtYearRange(data, timeRange){
 function plotCorLine(varName, color, yExtent){
 	//Clears the line chart svg
 	//lineChart.selectAll('*').remove();
-	if(varName == "Dow"){
+	if(varName == "DOW"){
 		graphDow();
 		return;
 	}
@@ -830,7 +848,7 @@ function highlight(varName){
 	lineChart.select('#'+varName)
 			.attr('stroke-opacity', 1)
 			.attr('stroke-width', 3);
-	lineChart.select('#Dow')
+	lineChart.select('#DOW')
 			.attr('stroke-opacity', 1)
 			.attr('stroke-width', 3);
 }
@@ -869,7 +887,7 @@ function findYExtent(brands){
 function plotPosCorrelation(){
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var posBrands = ["Dow", "Lamborghini", "Hummer", "Jeep"];
+	var posBrands = ["DOW", "Lamborghini", "Hummer", "Jeep"];
 	var posColors = ["#3498db","#f1c40f","#e67e22","#e74c3c"];
 	var yExtent = findYExtent(posBrands);
 	var posColorScale = d3.scaleOrdinal()
@@ -908,7 +926,7 @@ function plotInvCorrelation(){
 	console.log('inv correlation');
 	lineChart.selectAll('*').remove();
 	legend.selectAll('*').remove();
-	var invBrands = ["Dow", "Chevrolet", "Porsche", "Audi"];
+	var invBrands = ["DOW", "Chevrolet", "Porsche", "Audi"];
 	var invColors = ["#3498db","#9b59b6","#1abc9c","#2ecc71"];
 	var yExtent = findYExtent(invBrands);
 	var invColorScale = d3.scaleOrdinal()
