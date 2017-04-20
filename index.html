@@ -93,6 +93,12 @@
 		margin-left: -30px;
 		border-left: 1px solid #ecf0f1;
 	}
+	circle.interesting{
+		stroke: white;
+	}
+	circle.interesting:hover{
+		stroke: black;
+	}
 	path.corLine {
 		stroke-dasharray: 1000;
 		stroke-dashoffset: 1000;
@@ -500,11 +506,24 @@ function plotInterestingPoints(varName, path){
 					.attr('fill', linePlotColorScale(d.Brand))
 					.attr('transform', 'translate(' + xPos + ',' + yPos+')')
 					.attr('onmouseover', "showRapQuote('"+d.Lyric+"')")
-					.attr('class', ('interesting'+varName));
+					.attr('class', ('interesting'+varName))
+					.attr('class', 'interesting');
 		}
 
 
 	});
+}
+
+function displayName(varName){
+	console.log('displaying');
+	var line = document.getElementById(varName);
+	console.log(line);
+	var totalLength = line.getTotalLength();
+	var endpoint = line.getPointAtLength(totalLength);
+	lineChart.append('text')
+			.attr('x', endpoint.x)
+			.attr('y', endpoint.y)
+			.text(varName);
 }
 
 //Graphs [varName] and Dow Industrial Average over time to the main
@@ -551,6 +570,7 @@ function plotLine(varName){
 			      .attr("stroke-linecap", "round")
 			      .attr("stroke-width", 1.5)
 			      .attr('id', varName)
+			      .attr('onmouseover', "displayName('"+varName+"')")
 			      //.attr('class', 'dataLine')
 			      .attr("d", line);
 		plotInterestingPoints(varName, line(varData));
