@@ -191,17 +191,17 @@ function parseSalesRow(d){
 function parseMentionRow(d){
 	return {
 		Name: d['Song Name'],
-		Lyric: parseLyric(d['Lyric'], d['Artist']),
+		Lyric: parseLyric(d['Lyric'], d['Artist'], d['Year']),
 		Artist: d['Artist'],
 		Year: parseTime(d['Year']),
 		Brand: d['Car Brand']
 	};
 }
 
-function parseLyric(l, artist){
-	var lineBreaks = l.replace('/', '<br>')
+function parseLyric(l, artist, year){
+	var lineBreaks = l.replace(/\//, '<br>')
 	var replacement = lineBreaks.replace('_', " ");
-	return replacement += '<br> - ' + artist
+	return replacement += '<br> - ' + artist + " (" + year + ")"
 }
 
 //Keeps all of the percent change data indexed by car brand name
@@ -422,8 +422,8 @@ function plotInterestingPoints(varName, path){
 					.attr('r', 5)
 					.attr('fill', linePlotColorScale(d.Brand))
 					.attr('transform', 'translate(' + xPos + ',' + yPos+')')
-					.attr('onmouseover', "showRapQuote('"+d.Lyric+"')")
-					.attr('id', ('interesting'+varName))
+					.attr('onmouseover','showRapQuote("' + d.Lyric + '")')
+					.attr('id', 'interesting'+varName)
 					.attr('class', 'interesting');
 		}
 
@@ -768,7 +768,7 @@ var q = d3.queue();
 //Load files
 q.defer(d3.csv, 'Car_Rap_Percentages.csv', parseCarRow)
 	.defer(d3.csv, 'dow.csv', parseSalesRow)
-	.defer(d3.csv, 'CarMentions34.csv', parseMentionRow)
+	.defer(d3.csv, 'CarMentions.csv', parseMentionRow)
 	.await(initData);
 
 $(document).ready(function() {
