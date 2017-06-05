@@ -1,0 +1,105 @@
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+h1{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 48px;
+}
+svg{
+	background-color: white;
+}
+hr{
+	border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.graphs{
+	position: fixed;
+	width: 1000px;
+	left: 460px;
+	top: 90px;
+}
+.container{
+	margin: 0 10px 0;
+	max-width: 380px;
+	padding: 100px 40px 180px;
+	border-right: 1px solid #ecf0f1;
+	float: left;
+}
+.h_spacer{
+	width: 700px;
+	height: 700px;
+	float: left;
+	background-color: black;
+}
+.v_spacer{
+	height: 200px;
+}
+.word1{
+	color: #3498db;
+}
+.word2{
+	color: #9b59b6;
+}
+.credits{
+	font-size: 12px;
+}
+.barOverlay{
+	stroke: white;
+	stroke-width: 15;
+	stroke-opacity: 0.5;
+}
+.barOverlay:hover{
+	stroke-opacity: 0;
+	cursor:pointer;
+}
+.slider .handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: .5;
+  stroke-width: 1.25px;
+  pointer-events: none;
+}
+.header_positive{
+	color: #d35400;
+}
+.header_negative{
+	color: #2980b9;
+}
+.header_other{
+	color: #7f8c8d;
+}
+.opLow{
+	stroke-opacity: 0;
+}
+.opHigh{
+	stroke-opacity: 0.5;
+}
+#rap_quote{
+	font-style: italic;
+	margin: 10px;
+	text-align: center;
+	font-size: 10px;
+	/*margin-left: -300px;*/
+	max-width: 600px;
+	height: 40px;
+}
+#bar-chart{
+	margin-left: -30px;
+	border-left: 1px solid #ecf0f1;
+}
+circle.interesting{
+	stroke: white;
+}
+circle.interesting:hover{
+	stroke: #C0C0C0;
+}
+path.corLine {
+	stroke-dasharray: 1500;
+	stroke-dashoffset: 1500;
+	animation: draw 2s linear forwards;	
+}
+@keyframes draw {
+	50% { stroke-dashoffset: 1000; }
+	to { stroke-dashoffset: 0; }
+}
