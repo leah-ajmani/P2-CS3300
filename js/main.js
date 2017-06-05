@@ -298,9 +298,9 @@ function removeName(varName){
 //Displays a text box with [varname] when a line is
 //hovered over
 function displayName(varName){
-	console.log('displaying');
+	// console.log('displaying');
 	var line = document.getElementById(varName);
-	console.log(line);
+	// console.log(line);
 	var totalLength = line.getTotalLength();
 	var endpoint = line.getPointAtLength(totalLength);
 	lineChart.append('text')
@@ -362,7 +362,7 @@ function removePlot(varName){
 
 //Plots bars based on growth rate for [year]
 function createBarChart(){
-	console.log(valueData.length);
+	// console.log(valueData.length);
 	var heightScale = d3.scaleLinear()
 						.domain([0,Object.keys(valueData).length-1])
 						.range([heightBC-paddingBC,paddingBC]);
@@ -470,7 +470,7 @@ function plotCorLine(varName, color, yExtent){
 		return;
 	}
 
-	console.log(varName);
+	// console.log(varName);
 	var varData = dataAtYearRange(valueData[varName], [1994, 2014]);
 	corX = d3.scaleTime()
 					.domain([parseTime(1994), parseTime(2014)])
@@ -500,7 +500,7 @@ function plotCorLine(varName, color, yExtent){
 
 //highlights DOW and [varName]
 function highlight(varName){
-	console.log(varName);
+	// console.log(varName);
 	lineChart.selectAll('.corLine').attr('stroke-opacity', .2);
 	lineChart.select('#'+varName)
 			.attr('stroke-opacity', 1)
@@ -524,15 +524,15 @@ function findYExtent(brands){
 	for(var series in valueData){
 		if(brands.includes(series)){
 			var values = valueData[series].map(function(point){return point.Value;})
-			//console.log(series)
+			// console.log(series)
 			minimums.push(d3.min(values));
 			maximums.push(d3.max(values));
-			//console.log(d3.max(values));
+			// console.log(d3.max(values));
 		}
 	}
 	toReturn.push(d3.min(minimums));
 	toReturn.push(d3.max(maximums));
-	//console.log(toReturn);
+	// console.log(toReturn);
 	if(Math.abs(toReturn[0]) > Math.abs(toReturn[1])){
 		toReturn = [-(Math.abs(toReturn[0])), Math.abs(toReturn[0])];
 	}
@@ -562,7 +562,7 @@ function plotPosCorrelation(){
 }
 
 function plotInvCorrelation(){
-	console.log('inv correlation');
+	// console.log('inv correlation');
 	lineChart.selectAll('*').remove();
 	var invBrands = ["DOW", "Chevrolet", "Porsche", "Audi"];
 	var invColors = ["#3498db","#9b59b6","#1abc9c","#34495e"];
