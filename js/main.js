@@ -632,41 +632,41 @@ q.defer(d3.csv, 'data/Car_Rap_Percentages.csv', parseCarRow)
 
 $(document).ready(function() {
  	$(".container").fadeIn(1000);
- 	graphDow();
-	initBarChart();
-
-	var startPanel = new Waypoint({
-	  element: document.getElementById('start-panel'),
-	  handler: start,
-	});
-
-	//Initialize scrolling triggers
-   	var posCorPanel = new Waypoint({
-	  element: document.getElementById('panel1'),
-	  handler: function(direction) {plotPosCorrelation();},
-	  offset: '50%'
-	});
-
-	var invCorPanel = new Waypoint({
-	  element: document.getElementById('panel2'),
-	  handler:function(direction) {plotInvCorrelation();},
-	  offset: '60%'
-	});
-
-	var scrollingUpPos = new Waypoint({
-	  element: document.getElementById('panel1'),
-	  handler: plotInvCorrelation,
-	  offset: '-20%'
-	});
-
-	var scrollingUpInv = new Waypoint({
-	  element: document.getElementById('panel2'),
-	  handler:function(direction) {
-	  	if(direction == 'up'){plotPosCorrelation();}
-	  },
-	  offset: 'bottom-in-view'
-	});
+ 	setTimeout(function(){ 
+ 		graphDow();
+		initBarChart();
+	}, 500);
+ 	
 });
 
-graphDow();
-initBarChart();
+var startPanel = new Waypoint({
+  element: document.getElementById('start-panel'),
+  handler: start,
+});
+
+//Initialize scrolling triggers
+var posCorPanel = new Waypoint({
+  element: document.getElementById('panel1'),
+  handler: function(direction) {plotPosCorrelation();},
+  offset: '50%'
+});
+
+var invCorPanel = new Waypoint({
+  element: document.getElementById('panel2'),
+  handler:function(direction) {plotInvCorrelation();},
+  offset: '60%'
+});
+
+var scrollingUpPos = new Waypoint({
+  element: document.getElementById('panel1'),
+  handler: plotInvCorrelation,
+  offset: '-20%'
+});
+
+var scrollingUpInv = new Waypoint({
+  element: document.getElementById('panel2'),
+  handler:function(direction) {
+  	if(direction == 'up'){plotPosCorrelation();}
+  },
+  offset: 'bottom-in-view'
+});
