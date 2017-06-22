@@ -631,10 +631,10 @@ q.defer(d3.csv, 'data/Car_Rap_Percentages.csv', parseCarRow)
 	.await(initData);
 
 $(document).ready(function() {
-   	$(".container").fadeIn(1000);
-   	graphDow();
+ 	$(".container").fadeIn(1000);
+ 	graphDow();
 	initBarChart();
-});
+
 	var startPanel = new Waypoint({
 	  element: document.getElementById('start-panel'),
 	  handler: start,
@@ -666,4 +666,7 @@ $(document).ready(function() {
 	  },
 	  offset: 'bottom-in-view'
 	});
+});
 
+graphDow();
+initBarChart();
