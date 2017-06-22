@@ -634,6 +634,7 @@ $(document).ready(function() {
    	$(".container").fadeIn(1000);
    	graphDow();
 	initBarChart();
+});
 	var startPanel = new Waypoint({
 	  element: document.getElementById('start-panel'),
 	  handler: start,
@@ -666,4 +667,3 @@ $(document).ready(function() {
 	  offset: 'bottom-in-view'
 	});
 
-});
