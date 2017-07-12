@@ -630,13 +630,19 @@ q.defer(d3.csv, 'data/Car_Rap_Percentages.csv', parseCarRow)
 	.defer(d3.csv, 'data/CarMentions.csv', parseMentionRow)
 	.await(initData);
 
+$( window ).resize(function() {
+  document.getElementsByTagName('html')[0].style.zoom = 100*$(window).height()/600 + "%";
+});
+
 $(document).ready(function() {
+	// set zoom
+	document.getElementsByTagName('html')[0].style.zoom = 100*$(window).height()/600 + "%";
+
  	$(".container").fadeIn(1000);
- 	setTimeout(function(){ 
+ 	setTimeout(function(){
  		graphDow();
 		initBarChart();
-	}, 500);
- 	
+	}, 500); 	
 });
 
 var startPanel = new Waypoint({
